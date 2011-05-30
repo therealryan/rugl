@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.util.geom;
 
 import java.util.Arrays;
@@ -13,20 +12,19 @@ import com.ryanm.droid.rugl.geom.Shape;
 public class Tesselator
 {
 	/**
-	 * Builds a shape from a sequence of points. Note that the polygon
-	 * described by the points must not be self-intersecting
+	 * Builds a shape from a sequence of points. Note that the polygon described
+	 * by the points must not be self-intersecting
 	 * 
 	 * @param verts
 	 *           The vertices of the shape, in x1,y1,x2,y2 order
-	 * @return the {@link Shape} of the polygon, with a z-coordinate of
-	 *         zero
+	 * @return the {@link Shape} of the polygon, with a z-coordinate of zero
 	 */
-	public static Shape tesselate( float... verts )
+	public static Shape tesselate( final float... verts )
 	{
 		// slightly more convenient to have the points as vector objects
 		// rejigger to work directly on the input float array if
 		// performance is a concern
-		Vector3f[] v = new Vector3f[ verts.length / 2 ];
+		Vector3f[] v = new Vector3f[verts.length / 2];
 		int vi = 0;
 		for( int i = 0; i < verts.length; i += 2 )
 		{
@@ -36,16 +34,16 @@ public class Tesselator
 		// make sure the vertices are in anti-clockwise order - needed
 		// for vertex concavity test and to produce front-facing
 		// triangles
-		Vector3f[] vList = buildCounterList( v );
+		final Vector3f[] vList = buildCounterList( v );
 
 		// set to true when a vertex has been clipped from the shape
-		boolean[] used = new boolean[ vList.length ];
+		final boolean[] used = new boolean[vList.length];
 		Arrays.fill( used, false );
 
 		v = null;
 
 		// we know beforehand how many triangles there are
-		short[] tris = new short[ ( vList.length - 2 ) * 3 ];
+		final short[] tris = new short[( vList.length - 2 ) * 3];
 		int ti = 0;
 
 		short previous = 0;
@@ -55,7 +53,8 @@ public class Tesselator
 		while( ti < tris.length - 1 )
 		{
 			// if the internal angle is acute...
-			boolean isEar = isConcave( vList[ previous ], vList[ current ], vList[ next ] );
+			boolean isEar =
+					isConcave( vList[ previous ], vList[ current ], vList[ next ] );
 
 			// and the triangle does not contain any other vertices...
 			for( int i = 0; i < vList.length && isEar; i++ )
@@ -63,8 +62,8 @@ public class Tesselator
 				if( !used[ i ] && i != previous && i != current && i != next )
 				{
 					isEar &=
-							!contains( vList[ previous ], vList[ current ], vList[ next ],
-									vList[ i ] );
+							!contains( vList[ previous ], vList[ current ],
+									vList[ next ], vList[ i ] );
 				}
 			}
 
@@ -91,7 +90,7 @@ public class Tesselator
 		}
 
 		// extract vertex coordinates into an array
-		float[] vertexArray = new float[ 3 * vList.length ];
+		final float[] vertexArray = new float[3 * vList.length];
 		for( int i = 0; i < vList.length; i++ )
 		{
 			vertexArray[ 3 * i ] = vList[ i ].x;
@@ -102,15 +101,11 @@ public class Tesselator
 		return new Shape( vertexArray, tris );
 	}
 
-	private static short next( boolean[] used, short index )
+	private static short next( final boolean[] used, short index )
 	{
-		int count = 0;
-
 		do
 		{
 			index = ( short ) ( ( index + 1 ) % used.length );
-
-			count++;
 		}
 		while( used[ index ] );
 
@@ -124,10 +119,10 @@ public class Tesselator
 	 * @param b
 	 * @param c
 	 * @param p
-	 * @return <code>true</code> if the triangle abc contains the point
-	 *         p
+	 * @return <code>true</code> if the triangle abc contains the point p
 	 */
-	private static boolean contains( Vector3f a, Vector3f b, Vector3f c, Vector3f p )
+	private static boolean contains( final Vector3f a, final Vector3f b,
+			final Vector3f c, final Vector3f p )
 	{
 		if( LineUtils.relativeCCW( a.x, a.y, b.x, b.y, p.x, p.y ) == -1 )
 		{
@@ -142,19 +137,20 @@ public class Tesselator
 		return false;
 	}
 
-	private static boolean isConcave( Vector3f p, Vector3f c, Vector3f n )
+	private static boolean isConcave( final Vector3f p, final Vector3f c,
+			final Vector3f n )
 	{
-		int ccw = LineUtils.relativeCCW( p.x, p.y, c.x, c.y, n.x, n.y );
+		final int ccw = LineUtils.relativeCCW( p.x, p.y, c.x, c.y, n.x, n.y );
 
 		return ccw <= 0;
 	}
 
-	private static Vector3f[] buildCounterList( Vector3f[] v )
+	private static Vector3f[] buildCounterList( final Vector3f[] v )
 	{
-		Vector3f[] vList = new Vector3f[ v.length ];
+		final Vector3f[] vList = new Vector3f[v.length];
 
 		// determine winding order
-		boolean counter = traverseOrder( v );
+		final boolean counter = traverseOrder( v );
 
 		if( counter )
 		{
@@ -178,9 +174,10 @@ public class Tesselator
 	 * @param v
 	 * @return true if vertices are anti-clockwise
 	 */
-	private static boolean traverseOrder( Vector3f[] v )
+	private static boolean traverseOrder( final Vector3f[] v )
 	{
-		float area = v[ v.length - 1 ].x * v[ 0 ].y - v[ 0 ].x * v[ v.length - 1 ].y;
+		float area =
+				v[ v.length - 1 ].x * v[ 0 ].y - v[ 0 ].x * v[ v.length - 1 ].y;
 
 		for( int i = 0; i < v.length - 1; i++ )
 		{

@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.gl.facets.mutable;
 
 import com.ryanm.droid.rugl.gl.enums.FogMode;
@@ -17,7 +16,7 @@ public class MutFog extends MutableFacet<Fog>
 {
 	/***/
 	@Variable
-	public boolean enabled = false;;
+	public boolean enabled = false;
 
 	/***/
 	@Variable
@@ -43,7 +42,7 @@ public class MutFog extends MutableFacet<Fog>
 	/**
 	 * @param f
 	 */
-	public MutFog( Fog f )
+	public MutFog( final Fog f )
 	{
 		enabled = f.enabled;
 		mode = f.mode;

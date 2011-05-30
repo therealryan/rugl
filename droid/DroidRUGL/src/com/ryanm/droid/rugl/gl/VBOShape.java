@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.gl;
 
 import java.nio.ByteBuffer;
@@ -21,19 +20,18 @@ public class VBOShape
 {
 	static
 	{
-		Game.addSurfaceLIstener( new SurfaceListener() {
+		Game.addSurfaceLIstener( new SurfaceListener(){
 			@Override
 			public void onSurfaceCreated()
 			{
 				contextID++;
-			};
+			}
 		} );
 	}
 
 	/**
-	 * Increment this to indicate that VBO state may have been
-	 * invalidated, i.e. in This will cause all {@link VBOShape}s to
-	 * refresh their data
+	 * Increment this to indicate that VBO state may have been invalidated, i.e.
+	 * in This will cause all {@link VBOShape}s to refresh their data
 	 */
 	private static int contextID = 0;
 
@@ -43,9 +41,9 @@ public class VBOShape
 	public State state;
 
 	/**
-	 * The {@link #contextID} when the data was uploaded. If this is
-	 * ever different from {@link #contextID}, we know that the VBOs
-	 * may have been squelched
+	 * The {@link #contextID} when the data was uploaded. If this is ever
+	 * different from {@link #contextID}, we know that the VBOs may have been
+	 * squelched
 	 */
 	private int uploadedContextID;
 
@@ -64,7 +62,7 @@ public class VBOShape
 	/**
 	 * @param ts
 	 */
-	public VBOShape( TexturedShape ts )
+	public VBOShape( final TexturedShape ts )
 	{
 		state = ts.state;
 		vertexCount = ts.vertexCount();
@@ -92,7 +90,7 @@ public class VBOShape
 	/**
 	 * @param cs
 	 */
-	public VBOShape( ColouredShape cs )
+	public VBOShape( final ColouredShape cs )
 	{
 		state = cs.state;
 		vertexCount = cs.vertexCount();
@@ -130,7 +128,7 @@ public class VBOShape
 
 		if( dataVBOID == -1 )
 		{
-			IntBuffer ib = GLUtil.intScratch( 2 );
+			final IntBuffer ib = GLUtil.intScratch( 2 );
 			GLES11.glGenBuffers( 2, ib );
 			dataVBOID = ib.get( 0 );
 			indexVBOID = ib.get( 1 );
@@ -143,8 +141,8 @@ public class VBOShape
 			}
 
 			GLES11.glBindBuffer( GLES11.GL_ARRAY_BUFFER, dataVBOID );
-			GLES11.glBufferData( GLES11.GL_ARRAY_BUFFER, vertexCount * vertexBytes,
-					dataBuffer, GLES11.GL_STATIC_DRAW );
+			GLES11.glBufferData( GLES11.GL_ARRAY_BUFFER,
+					vertexCount * vertexBytes, dataBuffer, GLES11.GL_STATIC_DRAW );
 
 			GLES11.glBindBuffer( GLES11.GL_ELEMENT_ARRAY_BUFFER, indexVBOID );
 			GLES11.glBufferData( GLES11.GL_ELEMENT_ARRAY_BUFFER, indexCount * 2,
@@ -178,7 +176,7 @@ public class VBOShape
 	{
 		GLUtil.checkGLError();
 
-		IntBuffer ib = GLUtil.intScratch( 2 );
+		final IntBuffer ib = GLUtil.intScratch( 2 );
 		ib.put( 0, dataVBOID );
 		ib.put( 1, indexVBOID );
 		GLES11.glDeleteBuffers( 2, ib );

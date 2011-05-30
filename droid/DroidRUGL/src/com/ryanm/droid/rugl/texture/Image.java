@@ -1,28 +1,24 @@
 /*
- * Copyright (c) 2007, Ryan McNally All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. Neither the name of the <ORGANIZATION> nor
- * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.
+ * Copyright (c) 2007, Ryan McNally All rights reserved. Redistribution and use
+ * in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution. Neither
+ * the name of the <ORGANIZATION> nor the names of its contributors may be used
+ * to endorse or promote products derived from this software without specific
+ * prior written permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
+ * AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package com.ryanm.droid.rugl.texture;
@@ -56,10 +52,9 @@ public abstract class Image
 		/**
 		 * Uses 8 bits for each component
 		 */
-		RGBA( 4, GLES10.GL_RGBA )
-		{
+		RGBA( 4, GLES10.GL_RGBA ) {
 			@Override
-			public void write( int pixel, ByteBuffer buffer )
+			public void write( final int pixel, final ByteBuffer buffer )
 			{
 				buffer.put( ( byte ) ( pixel >> 16 & 0xFF ) );
 				buffer.put( ( byte ) ( pixel >> 8 & 0xFF ) );
@@ -71,10 +66,9 @@ public abstract class Image
 		/**
 		 * Uses 8 bits for each component.
 		 */
-		LUMINANCE_ALPHA( 2, GL10.GL_LUMINANCE_ALPHA )
-		{
+		LUMINANCE_ALPHA( 2, GL10.GL_LUMINANCE_ALPHA ) {
 			@Override
-			public void write( int pixel, ByteBuffer buffer )
+			public void write( final int pixel, final ByteBuffer buffer )
 			{
 				buffer.put( ( byte ) ( pixel >> 8 & 0xFF ) );
 				buffer.put( ( byte ) ( pixel >> 24 & 0xFF ) );
@@ -91,7 +85,7 @@ public abstract class Image
 		 */
 		public final int glFormat;
 
-		private Format( int bytes, int glFormat )
+		private Format( final int bytes, final int glFormat )
 		{
 			this.bytes = bytes;
 			this.glFormat = glFormat;
@@ -106,7 +100,7 @@ public abstract class Image
 		 *           The buffer to write to
 		 */
 		public abstract void write( int argb, ByteBuffer buffer );
-	};
+	}
 
 	/**
 	 * The image format
@@ -128,7 +122,7 @@ public abstract class Image
 	 * @param height
 	 * @param format
 	 */
-	protected Image( int width, int height, Format format )
+	protected Image( final int width, final int height, final Format format )
 	{
 		this.width = width;
 		this.height = height;
@@ -141,14 +135,14 @@ public abstract class Image
 	 * @param is
 	 * @throws IOException
 	 */
-	protected Image( InputStream is ) throws IOException
+	protected Image( final InputStream is ) throws IOException
 	{
-		DataInputStream dis = new DataInputStream( is );
+		final DataInputStream dis = new DataInputStream( is );
 
 		width = dis.readInt();
 		height = dis.readInt();
 
-		int formatOrdinal = dis.readInt();
+		final int formatOrdinal = dis.readInt();
 		assert formatOrdinal >= 0 && formatOrdinal < Format.values().length : "Format with ordinal "
 				+ formatOrdinal + " not found";
 		format = Format.values()[ formatOrdinal ];
@@ -161,13 +155,14 @@ public abstract class Image
 	 * @return An {@link Image}
 	 * @throws IOException
 	 */
-	public static Image loadImage( String fileName ) throws IOException
+	public static Image loadImage( final String fileName ) throws IOException
 	{
-		RandomAccessFile raf = new RandomAccessFile( fileName, "r" );
-		FileChannel ch = raf.getChannel();
-		MappedByteBuffer buffer = ch.map( FileChannel.MapMode.READ_ONLY, 0, raf.length() );
+		final RandomAccessFile raf = new RandomAccessFile( fileName, "r" );
+		final FileChannel ch = raf.getChannel();
+		final MappedByteBuffer buffer =
+				ch.map( FileChannel.MapMode.READ_ONLY, 0, raf.length() );
 
-		Image i = new BufferImage( buffer );
+		final Image i = new BufferImage( buffer );
 
 		ch.close();
 

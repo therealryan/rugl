@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.util.geom;
 
 /**
@@ -31,7 +30,7 @@ public class GridIterate
 
 		private final int z;
 
-		private Move( int x, int y, int z )
+		private Move( final int x, final int y, final int z )
 		{
 			this.x = x;
 			this.y = y;
@@ -44,9 +43,11 @@ public class GridIterate
 
 	private Move xDir, yDir, zDir;
 
-	private BoundingCuboid segBounds = new BoundingCuboid( 0, 0, 0, 0, 0, 0 );
+	private final BoundingCuboid segBounds = new BoundingCuboid( 0, 0, 0, 0, 0,
+			0 );
 
-	private BoundingCuboid gridBounds = new BoundingCuboid( 0, 0, 0, 0, 0, 0 );
+	private final BoundingCuboid gridBounds = new BoundingCuboid( 0, 0, 0, 0, 0,
+			0 );
 
 	/**
 	 * The coordinates of the last grid square
@@ -68,14 +69,15 @@ public class GridIterate
 	 * @param endy
 	 * @param endz
 	 */
-	public void setSeg( float startx, float starty, float startz, float endx, float endy,
-			float endz )
+	public void setSeg( final float startx, final float starty,
+			final float startz, final float endx, final float endy,
+			final float endz )
 	{
 		start.set( startx, starty, startz );
 		end.set( endx, endy, endz );
 
-		lastGridCoords.set( ( int ) Math.floor( start.x ), ( int ) Math.floor( start.y ),
-				( int ) Math.floor( start.z ) );
+		lastGridCoords.set( ( int ) Math.floor( start.x ),
+				( int ) Math.floor( start.y ), ( int ) Math.floor( start.z ) );
 
 		xDir = startx < endx ? Move.X_HIGH : Move.X_LOW;
 		yDir = starty < endy ? Move.Y_HIGH : Move.Y_LOW;
@@ -112,7 +114,8 @@ public class GridIterate
 		q.set( end );
 
 		// clip to grid
-		lastGridExit = clip( p, q, lastGridCoords.x, lastGridCoords.y, lastGridCoords.z );
+		lastGridExit =
+				clip( p, q, lastGridCoords.x, lastGridCoords.y, lastGridCoords.z );
 
 		// watch for corner-case confusion
 		if( lastGridExit.x != 0 && lastGridExit.x != xDir.x )
@@ -140,20 +143,22 @@ public class GridIterate
 		}
 	}
 
-	private Move clip( Vector3f p, Vector3f q, int x, int y, int z )
+	private static Move clip( final Vector3f p, final Vector3f q, final int x,
+			final int y, final int z )
 	{
 		clipPoint( p, q, x, y, z );
-		Move exit = clipPoint( q, p, x, y, z );
+		final Move exit = clipPoint( q, p, x, y, z );
 		return exit;
 	}
 
-	private Move clipPoint( Vector3f p, Vector3f q, int x, int y, int z )
+	private static Move clipPoint( final Vector3f p, final Vector3f q,
+			final int x, final int y, final int z )
 	{
 		Move m = Move.COMPLETE;
 
 		if( p.x < x )
 		{
-			float d = ( x - p.x ) / ( q.x - p.x );
+			final float d = ( x - p.x ) / ( q.x - p.x );
 			p.y += ( q.y - p.y ) * d;
 			p.z += ( q.z - p.z ) * d;
 			p.x = x;
@@ -163,7 +168,7 @@ public class GridIterate
 
 		if( p.x > x + 1 )
 		{
-			float d = ( x + 1 - p.x ) / ( q.x - p.x );
+			final float d = ( x + 1 - p.x ) / ( q.x - p.x );
 			p.y += ( q.y - p.y ) * d;
 			p.z += ( q.z - p.z ) * d;
 			p.x = x + 1;
@@ -173,7 +178,7 @@ public class GridIterate
 
 		if( p.y < y )
 		{
-			float d = ( y - p.y ) / ( q.y - p.y );
+			final float d = ( y - p.y ) / ( q.y - p.y );
 			p.x += ( q.x - p.x ) * d;
 			p.z += ( q.z - p.z ) * d;
 			p.y = y;
@@ -183,7 +188,7 @@ public class GridIterate
 
 		if( p.y > y + 1 )
 		{
-			float d = ( y + 1 - p.y ) / ( q.y - p.y );
+			final float d = ( y + 1 - p.y ) / ( q.y - p.y );
 			p.x += ( q.x - p.x ) * d;
 			p.z += ( q.z - p.z ) * d;
 			p.y = y + 1;
@@ -193,7 +198,7 @@ public class GridIterate
 
 		if( p.z < z )
 		{
-			float d = ( z - p.z ) / ( q.z - p.z );
+			final float d = ( z - p.z ) / ( q.z - p.z );
 			p.x += ( q.x - p.x ) * d;
 			p.y += ( q.y - p.y ) * d;
 			p.z = z;
@@ -203,7 +208,7 @@ public class GridIterate
 
 		if( p.z > z + 1 )
 		{
-			float d = ( z + 1 - p.z ) / ( q.z - p.z );
+			final float d = ( z + 1 - p.z ) / ( q.z - p.z );
 			p.x += ( q.x - p.x ) * d;
 			p.y += ( q.y - p.y ) * d;
 			p.z = z + 1;

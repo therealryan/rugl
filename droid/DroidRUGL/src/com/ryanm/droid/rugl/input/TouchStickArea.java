@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.input;
 
 import com.ryanm.droid.rugl.geom.ColouredShape;
@@ -15,10 +14,9 @@ import com.ryanm.preflect.annote.Variable;
 import com.ryanm.preflect.annote.WidgetHint;
 
 /**
- * An area that causes a {@link TouchStick} to appear when and where a
- * touch is placed. This solves the unwanted initial input when you
- * don't manage to place your touch exactly in the center of a static
- * {@link TouchStick}
+ * An area that causes a {@link TouchStick} to appear when and where a touch is
+ * placed. This solves the unwanted initial input when you don't manage to place
+ * your touch exactly in the center of a static {@link TouchStick}
  * 
  * @author ryanm
  */
@@ -60,14 +58,15 @@ public class TouchStickArea extends AbstractTouchStick
 	 * @param stickRadius
 	 *           radius of stick that appears
 	 */
-	public TouchStickArea( float x, float y, float width, float height, float stickRadius )
+	public TouchStickArea( final float x, final float y, final float width,
+			final float height, final float stickRadius )
 	{
 		pad.set( x, x + width, y, y + height );
 
 		stick = new TouchStick( x, y, stickRadius );
 
 		// redirect clicks to our listener
-		stick.listener = new ClickListener() {
+		stick.listener = new ClickListener(){
 			@Override
 			public void onClick()
 			{
@@ -78,18 +77,18 @@ public class TouchStickArea extends AbstractTouchStick
 			}
 
 			@Override
-			public void onClickHold( boolean active )
+			public void onClickHold( final boolean active )
 			{
 				if( listener != null )
 				{
 					listener.onClickHold( active );
 				}
-			};
+			}
 		};
 	}
 
 	@Override
-	public boolean pointerAdded( Pointer p )
+	public boolean pointerAdded( final Pointer p )
 	{
 		if( pad.contains( p.x, p.y ) )
 		{
@@ -106,7 +105,7 @@ public class TouchStickArea extends AbstractTouchStick
 	}
 
 	@Override
-	public void pointerRemoved( Pointer p )
+	public void pointerRemoved( final Pointer p )
 	{
 		if( p == touch )
 		{
@@ -131,16 +130,16 @@ public class TouchStickArea extends AbstractTouchStick
 	}
 
 	@Override
-	public void draw( StackedRenderer sr )
+	public void draw( final StackedRenderer sr )
 	{
 		if( draw && touch == null )
 		{
 			if( outline == null )
 			{
 				outline =
-						new ColouredShape( ShapeUtil.innerQuad( pad.x.getMin(), pad.y.getMin(),
-								pad.x.getMax(), pad.y.getMax(), 5, 0 ), boundsColour,
-								GLUtil.typicalState );
+						new ColouredShape( ShapeUtil.innerQuad( pad.x.getMin(),
+								pad.y.getMin(), pad.x.getMax(), pad.y.getMax(), 5, 0 ),
+								boundsColour, GLUtil.typicalState );
 			}
 
 			outline.render( sr );

@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.text;
 
 import java.util.ArrayList;
@@ -9,7 +8,6 @@ import com.ryanm.droid.rugl.geom.TexturedShape;
 import com.ryanm.droid.rugl.geom.TexturedShapeWelder;
 import com.ryanm.droid.rugl.util.geom.Vector2f;
 import com.ryanm.droid.rugl.util.geom.Vector3f;
-
 
 /**
  * Represents a block of line-wrapped text
@@ -28,10 +26,10 @@ public class TextLayout
 		/**
 		 * Text is placed against the left side of the line
 		 */
-		LEFT
-		{
+		LEFT {
 			@Override
-			public void layoutLine( CharSequence line, float lineLength, float[] vertices )
+			public void layoutLine( final CharSequence line,
+					final float lineLength, final float[] vertices )
 			{
 				// no op
 			}
@@ -39,12 +37,13 @@ public class TextLayout
 		/**
 		 * Text is placed against the right side of the line
 		 */
-		RIGHT
-		{
+		RIGHT {
 			@Override
-			public void layoutLine( CharSequence line, float lineLength, float[] vertices )
+			public void layoutLine( final CharSequence line,
+					final float lineLength, final float[] vertices )
 			{
-				float whiteSpace = lineLength - vertices[ vertices.length - 3 ];
+				final float whiteSpace =
+						lineLength - vertices[ vertices.length - 3 ];
 
 				for( int i = 0; i < vertices.length; i += 3 )
 				{
@@ -55,10 +54,10 @@ public class TextLayout
 		/**
 		 * Text is placed in the center of the line
 		 */
-		CENTER
-		{
+		CENTER {
 			@Override
-			public void layoutLine( CharSequence line, float lineLength, float[] vertices )
+			public void layoutLine( final CharSequence line,
+					final float lineLength, final float[] vertices )
 			{
 				float whiteSpace = lineLength - vertices[ vertices.length - 3 ];
 
@@ -73,10 +72,10 @@ public class TextLayout
 		/**
 		 * The whitespace in the text is expanded to fill the line
 		 */
-		JUSTIFY
-		{
+		JUSTIFY {
 			@Override
-			public void layoutLine( CharSequence line, float lineLength, float[] vertices )
+			public void layoutLine( final CharSequence line,
+					final float lineLength, final float[] vertices )
 			{
 				float whiteSpace = lineLength - vertices[ vertices.length - 3 ];
 
@@ -115,12 +114,11 @@ public class TextLayout
 		 * @param lineLength
 		 *           The length of the line
 		 * @param vertices
-		 *           The vertices of the characters, in bl tl, br tr
-		 *           order
+		 *           The vertices of the characters, in bl tl, br tr order
 		 */
 		public abstract void layoutLine( CharSequence line, float lineLength,
 				float[] vertices );
-	};
+	}
 
 	/**
 	 * The full text of this {@link TextLayout}
@@ -143,8 +141,7 @@ public class TextLayout
 	public final Font font;
 
 	/**
-	 * The generated layout. The origin of the first character is at
-	 * the (0,0)
+	 * The generated layout. The origin of the first character is at the (0,0)
 	 */
 	public final TexturedShape textShape;
 
@@ -158,21 +155,21 @@ public class TextLayout
 	 * @param colour
 	 *           <code>null</code> for white
 	 */
-	public TextLayout( CharSequence text, Font font, Alignment alignment,
-			float lineLength, int colour )
+	public TextLayout( final CharSequence text, final Font font,
+			Alignment alignment, final float lineLength, final int colour )
 	{
 		fullText = text.toString();
 		this.font = font;
 		this.alignment = alignment;
 
-		List<CharSequence> linesList = new ArrayList<CharSequence>();
+		final List<CharSequence> linesList = new ArrayList<CharSequence>();
 
 		if( alignment == null )
 		{
 			alignment = Alignment.LEFT;
 		}
 
-		TexturedShapeWelder tsb = new TexturedShapeWelder();
+		final TexturedShapeWelder tsb = new TexturedShapeWelder();
 
 		float yOffset = 0;
 
@@ -185,7 +182,7 @@ public class TextLayout
 				end++;
 			}
 
-			CharSequence[] lineArray =
+			final CharSequence[] lineArray =
 					splitParagraph( text.subSequence( start, end ), font, lineLength );
 
 			Collections.addAll( linesList, lineArray );
@@ -193,7 +190,8 @@ public class TextLayout
 			// add lines
 			for( int i = 0; i < lineArray.length; i++ )
 			{
-				TexturedShape ts = font.buildTextShape( lineArray[ i ], colour );
+				final TexturedShape ts =
+						font.buildTextShape( lineArray[ i ], colour );
 
 				ts.translate( 0, yOffset, 0 );
 
@@ -214,7 +212,7 @@ public class TextLayout
 
 		textShape = tsb.fuse();
 
-		lines = linesList.toArray( new CharSequence[ linesList.size() ] );
+		lines = linesList.toArray( new CharSequence[linesList.size()] );
 	}
 
 	/**
@@ -224,10 +222,10 @@ public class TextLayout
 	 * @param f
 	 * @param lineLength
 	 */
-	private static CharSequence[] splitParagraph( CharSequence text, Font f,
-			float lineLength )
+	private static CharSequence[] splitParagraph( final CharSequence text,
+			final Font f, final float lineLength )
 	{
-		List<CharSequence> lines = new ArrayList<CharSequence>();
+		final List<CharSequence> lines = new ArrayList<CharSequence>();
 
 		int prev = 0;
 		int increment;
@@ -237,8 +235,8 @@ public class TextLayout
 		{
 			prev = next;
 			increment =
-					TextMeasurer.indexOfCharAt( f, text.subSequence( prev, text.length() ),
-							lineLength );
+					TextMeasurer.indexOfCharAt( f,
+							text.subSequence( prev, text.length() ), lineLength );
 
 			if( increment == -1 )
 			{
@@ -278,20 +276,19 @@ public class TextLayout
 		}
 		while( increment > 0 );
 
-		return lines.toArray( new CharSequence[ lines.size() ] );
+		return lines.toArray( new CharSequence[lines.size()] );
 	}
 
 	/**
 	 * Computes the caret position
 	 * 
 	 * @param caretPosition
-	 *           The index of the character that the caret is in front
-	 *           of.
+	 *           The index of the character that the caret is in front of.
 	 * @param dest
-	 *           The {@link Vector2f} array in which to store the
-	 *           result, or null to construct a new {@link Vector2f}[4]
-	 * @return <code>dest</code>, or a new {@link Vector2f}[4]
-	 *         containing the result
+	 *           The {@link Vector2f} array in which to store the result, or null
+	 *           to construct a new {@link Vector2f}[4]
+	 * @return <code>dest</code>, or a new {@link Vector2f}[4] containing the
+	 *         result
 	 */
 	public Vector2f getCaretPosition( int caretPosition, Vector2f dest )
 	{
@@ -308,22 +305,24 @@ public class TextLayout
 		if( caretPosition < fullText.length() )
 		{
 			// 4 vertices per character, so...
-			Vector3f v = textShape.getVertex( 4 * caretPosition, null );
+			final Vector3f v = textShape.getVertex( 4 * caretPosition, null );
 
 			// the offset from the char baseline to the bl vertex of the
 			// quad
 
-			Glyph glyph = font.map( fullText.charAt( caretPosition ) );
-			Vector2f glyphOffset = glyph.getGlyphOffset( null );
+			final Glyph glyph = font.map( fullText.charAt( caretPosition ) );
+			final Vector2f glyphOffset = glyph.getGlyphOffset( null );
 
 			dest.set( v.x - glyphOffset.x, v.y - glyphOffset.y );
 		}
 		else
 		{
-			Vector3f v = textShape.getVertex( textShape.vertexCount() - 4, null );
+			final Vector3f v =
+					textShape.getVertex( textShape.vertexCount() - 4, null );
 
-			Glyph glyph = font.map( fullText.charAt( fullText.length() - 1 ) );
-			Vector2f glyphOffset = glyph.getGlyphOffset( null );
+			final Glyph glyph =
+					font.map( fullText.charAt( fullText.length() - 1 ) );
+			final Vector2f glyphOffset = glyph.getGlyphOffset( null );
 
 			dest.set( v.x - glyphOffset.x + glyph.advance, v.y - glyphOffset.y );
 		}

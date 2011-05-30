@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.res;
 
 import java.util.Collections;
@@ -12,8 +11,8 @@ import android.content.res.Resources;
 import android.util.Log;
 
 /**
- * An asynchronous resource-loading service. Maintains two threads:
- * one to do the loading IO, one to do post-loading processing
+ * An asynchronous resource-loading service. Maintains two threads: one to do
+ * the loading IO, one to do post-loading processing
  * 
  * @author ryanm
  */
@@ -25,11 +24,13 @@ public class ResourceLoader
 	private static List<Loader> complete = Collections
 			.synchronizedList( new LinkedList<Loader>() );
 
-	private static ExecutorService loaderService = Executors.newSingleThreadExecutor();
+	private static ExecutorService loaderService = Executors
+			.newSingleThreadExecutor();
 
 	private static AtomicInteger queueSize = new AtomicInteger( 0 );
 
-	private static ExecutorService postLoaderService = Executors.newSingleThreadExecutor();
+	private static ExecutorService postLoaderService = Executors
+			.newSingleThreadExecutor();
 
 	/***/
 	public static final String LOG_TAG = "ResourceLoader";
@@ -39,7 +40,7 @@ public class ResourceLoader
 	 * 
 	 * @param resources
 	 */
-	public static void start( Resources resources )
+	public static void start( final Resources resources )
 	{
 		ResourceLoader.resources = resources;
 	}
@@ -49,7 +50,7 @@ public class ResourceLoader
 	 * 
 	 * @param l
 	 */
-	public static void load( Loader l )
+	public static void load( final Loader l )
 	{
 		queueSize.incrementAndGet();
 		loaderService.submit( new LoaderRunnable( l ) );
@@ -60,7 +61,7 @@ public class ResourceLoader
 	 * 
 	 * @param l
 	 */
-	public static void loadNow( Loader l )
+	public static void loadNow( final Loader l )
 	{
 		l.load();
 		l.postLoad();
@@ -68,14 +69,14 @@ public class ResourceLoader
 	}
 
 	/**
-	 * Call this in the main thread, it'll cause completed loaders to
-	 * call {@link Loader#complete()}
+	 * Call this in the main thread, it'll cause completed loaders to call
+	 * {@link Loader#complete()}
 	 */
 	public static void checkCompletion()
 	{
 		while( !complete.isEmpty() )
 		{
-			Loader l = complete.remove( 0 );
+			final Loader l = complete.remove( 0 );
 			queueSize.decrementAndGet();
 			Log.i( LOG_TAG, "Loaded resource " + l );
 
@@ -107,31 +108,30 @@ public class ResourceLoader
 		protected T resource;
 
 		/**
-		 * If an exception is encountered during loading, save it here
-		 * and you can deal with it later
+		 * If an exception is encountered during loading, save it here and you can
+		 * deal with it later
 		 */
 		protected Throwable exception;
 
 		/**
-		 * Indicates if the loader should {@link #complete()} as soon as
-		 * possible, or if it should be deferred to whenever
+		 * Indicates if the loader should {@link #complete()} as soon as possible,
+		 * or if it should be deferred to whenever
 		 * {@link ResourceLoader#checkCompletion()} is called.
 		 */
 		public boolean selfCompleting = false;
 
 		/**
-		 * Overload this to do the loading IO and set {@link #resource}.
-		 * This is called on a shared loading thread
+		 * Overload this to do the loading IO and set {@link #resource}. This is
+		 * called on a shared loading thread
 		 */
 		public abstract void load();
 
 		/**
-		 * This method is called on shared thread. Use it to do any
-		 * processing
+		 * This method is called on shared thread. Use it to do any processing
 		 */
 		public void postLoad()
 		{
-		};
+		}
 
 		/**
 		 * This is called on the main thread when loading is complete
@@ -145,7 +145,7 @@ public class ResourceLoader
 
 		private boolean loaded = false;
 
-		private LoaderRunnable( Loader loader )
+		private LoaderRunnable( final Loader loader )
 		{
 			this.loader = loader;
 		}

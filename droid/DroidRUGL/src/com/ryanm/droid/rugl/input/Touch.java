@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.input;
 
 import java.util.ArrayList;
@@ -12,15 +11,15 @@ import android.view.MotionEvent;
 import com.ryanm.droid.rugl.Game;
 
 /**
- * Provides a polling-style interface to multitouch pointers. Note
- * that this flips the y-axis so the the origin is at the bottom-left
- * of the screen
+ * Provides a polling-style interface to multitouch pointers. Note that this
+ * flips the y-axis so the the origin is at the bottom-left of the screen
  * 
  * @author ryanm
  */
 public class Touch
 {
-	private static final boolean multitouch = Integer.parseInt( Build.VERSION.SDK ) >= 5;
+	private static final boolean multitouch = Integer
+			.parseInt( Build.VERSION.SDK ) >= 5;
 
 	private static ArrayList<Pointer> pointerList = new ArrayList<Pointer>();
 
@@ -32,7 +31,7 @@ public class Touch
 	/**
 	 * An array of the active pointers
 	 */
-	public static Pointer[] pointers = new Pointer[ 0 ];
+	public static Pointer[] pointers = new Pointer[0];
 
 	private static final Queue<MotionEvent> touchEvents =
 			new ConcurrentLinkedQueue<MotionEvent>();
@@ -40,21 +39,20 @@ public class Touch
 	/**
 	 * @param me
 	 */
-	public static void onTouchEvent( MotionEvent me )
+	public static void onTouchEvent( final MotionEvent me )
 	{
 		touchEvents.offer( me );
 	}
 
 	/**
-	 * Call this once per frame to process touch events on the main
-	 * thread
+	 * Call this once per frame to process touch events on the main thread
 	 */
 	public static void processTouches()
 	{
 
 		while( !touchEvents.isEmpty() )
 		{
-			MotionEvent me = touchEvents.poll();
+			final MotionEvent me = touchEvents.poll();
 
 			if( multitouch )
 			{
@@ -94,33 +92,34 @@ public class Touch
 	}
 
 	/**
-	 * Sets scaling factors for translation between physical and
-	 * desired coordinate systems
+	 * Sets scaling factors for translation between physical and desired
+	 * coordinate systems
 	 * 
 	 * @param desiredWidth
 	 * @param desiredHeight
 	 * @param actualWidth
 	 * @param actualHeight
 	 */
-	public static void setScreenSize( float desiredWidth, float desiredHeight,
-			int actualWidth, int actualHeight )
+	public static void setScreenSize( final float desiredWidth,
+			final float desiredHeight, final int actualWidth,
+			final int actualHeight )
 	{
 		xScale = desiredWidth / actualWidth;
 		yScale = desiredHeight / actualHeight;
 	}
 
-	private static void addPrimary( MotionEvent me )
+	private static void addPrimary( final MotionEvent me )
 	{
 		assert pointerList.isEmpty();
 
-		Pointer p = new Pointer( me.getPointerId( 0 ) );
+		final Pointer p = new Pointer( me.getPointerId( 0 ) );
 		p.x = me.getX() * xScale;
 		p.y = ( Game.screenHeight - me.getY() ) * yScale;
 		p.size = me.getSize();
 
 		pointerList.add( p );
 
-		pointers = pointerList.toArray( new Pointer[ pointerList.size() ] );
+		pointers = pointerList.toArray( new Pointer[pointerList.size()] );
 
 		boolean eaten = false;
 		for( int j = 0; j < listeners.size() && !eaten; j++ )
@@ -129,21 +128,21 @@ public class Touch
 		}
 	}
 
-	private static void addSecondary( MotionEvent me )
+	private static void addSecondary( final MotionEvent me )
 	{
 		assert !pointerList.isEmpty();
 
 		final int pointerIndex =
 				( me.getAction() & MotionEvent.ACTION_POINTER_ID_MASK ) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
 
-		Pointer p = new Pointer( me.getPointerId( pointerIndex ) );
+		final Pointer p = new Pointer( me.getPointerId( pointerIndex ) );
 		p.x = me.getX( pointerIndex ) * xScale;
 		p.y = ( Game.screenHeight - me.getY( pointerIndex ) ) * yScale;
 		p.size = me.getSize( pointerIndex );
 
 		pointerList.add( pointerIndex, p );
 
-		pointers = pointerList.toArray( new Pointer[ pointerList.size() ] );
+		pointers = pointerList.toArray( new Pointer[pointerList.size()] );
 
 		boolean eaten = false;
 		for( int j = 0; j < listeners.size() && !eaten; j++ )
@@ -152,13 +151,14 @@ public class Touch
 		}
 	}
 
-	private static void removePrimary( MotionEvent me )
+	private static void removePrimary(
+			@SuppressWarnings( "unused" ) final MotionEvent me )
 	{
 		if( pointerList.size() == 1 )
 		{
-			Pointer p = pointerList.remove( 0 );
+			final Pointer p = pointerList.remove( 0 );
 
-			pointers = pointerList.toArray( new Pointer[ pointerList.size() ] );
+			pointers = pointerList.toArray( new Pointer[pointerList.size()] );
 
 			for( int j = 0; j < listeners.size(); j++ )
 			{
@@ -171,16 +171,16 @@ public class Touch
 		}
 	}
 
-	private static void removeSecondary( MotionEvent me )
+	private static void removeSecondary( final MotionEvent me )
 	{
 		final int pointerIndex =
 				( me.getAction() & MotionEvent.ACTION_POINTER_ID_MASK ) >> MotionEvent.ACTION_POINTER_ID_SHIFT;
 
 		if( pointerList.size() > pointerIndex )
 		{
-			Pointer p = pointerList.remove( pointerIndex );
+			final Pointer p = pointerList.remove( pointerIndex );
 
-			pointers = pointerList.toArray( new Pointer[ pointerList.size() ] );
+			pointers = pointerList.toArray( new Pointer[pointerList.size()] );
 
 			assert p.id == me.getPointerId( pointerIndex );
 
@@ -192,17 +192,18 @@ public class Touch
 		else
 		{
 			Log.e( Game.RUGL_TAG,
-					"Touch.removeSecondary() no pointer to remove! from index " + pointerIndex );
+					"Touch.removeSecondary() no pointer to remove! from index "
+							+ pointerIndex );
 		}
 	}
 
-	private static void updatePointers( MotionEvent me )
+	private static void updatePointers( final MotionEvent me )
 	{
-		int pointerCount = MEWrap.getPointerCount( me );
+		final int pointerCount = MEWrap.getPointerCount( me );
 
 		for( int i = 0; i < pointerCount; i++ )
 		{
-			Pointer p = pointerList.get( i );
+			final Pointer p = pointerList.get( i );
 
 			assert p.id == me.getPointerId( i );
 
@@ -212,9 +213,9 @@ public class Touch
 		}
 	}
 
-	private static void updatePointer( MotionEvent me )
+	private static void updatePointer( final MotionEvent me )
 	{
-		Pointer p = pointerList.get( 0 );
+		final Pointer p = pointerList.get( 0 );
 
 		p.x = me.getX() * xScale;
 		p.y = ( Game.screenHeight - me.getY() ) * yScale;
@@ -225,7 +226,7 @@ public class Touch
 	 * @param l
 	 *           The object to inform of pointer changes
 	 */
-	public static void addListener( TouchListener l )
+	public static void addListener( final TouchListener l )
 	{
 		listeners.add( l );
 	}
@@ -234,7 +235,7 @@ public class Touch
 	 * @param l
 	 *           The object to stop informing of pointer changes
 	 */
-	public static void removeListener( TouchListener l )
+	public static void removeListener( final TouchListener l )
 	{
 		listeners.remove( l );
 	}
@@ -258,7 +259,7 @@ public class Touch
 		/***/
 		public float size;
 
-		private Pointer( int id )
+		private Pointer( final int id )
 		{
 			this.id = id;
 		}
@@ -266,7 +267,7 @@ public class Touch
 		@Override
 		public String toString()
 		{
-			StringBuilder buff = new StringBuilder();
+			final StringBuilder buff = new StringBuilder();
 			buff.append( id ).append( " ( " ).append( x ).append( ", " );
 			buff.append( y ).append( " ) " ).append( size );
 			return buff.toString();
@@ -282,10 +283,9 @@ public class Touch
 		 * Called when a new pointer is added to the screen
 		 * 
 		 * @param p
-		 *           This object's fields will be updated as the pointer
-		 *           changes
-		 * @return <code>true</code> if the touch should be consumed. No
-		 *         other listeners will be notified
+		 *           This object's fields will be updated as the pointer changes
+		 * @return <code>true</code> if the touch should be consumed. No other
+		 *         listeners will be notified
 		 */
 		public boolean pointerAdded( Pointer p );
 
@@ -304,8 +304,7 @@ public class Touch
 	}
 
 	/**
-	 * Wraps {@link MotionEvent} methods and variables that may not be
-	 * present
+	 * Wraps {@link MotionEvent} methods and variables that may not be present
 	 * 
 	 * @author ryanm
 	 */
@@ -313,11 +312,13 @@ public class Touch
 	{
 		private static final int ACTION_MASK = MotionEvent.ACTION_MASK;
 
-		private static final int ACTION_POINTER_DOWN = MotionEvent.ACTION_POINTER_DOWN;
+		private static final int ACTION_POINTER_DOWN =
+				MotionEvent.ACTION_POINTER_DOWN;
 
-		private static final int ACTION_POINTER_UP = MotionEvent.ACTION_POINTER_UP;
+		private static final int ACTION_POINTER_UP =
+				MotionEvent.ACTION_POINTER_UP;
 
-		private static final int getPointerCount( MotionEvent me )
+		private static final int getPointerCount( final MotionEvent me )
 		{
 			return me.getPointerCount();
 		}
@@ -329,9 +330,9 @@ public class Touch
 	public static void reset()
 	{
 		pointerList.clear();
-		pointers = new Pointer[ 0 ];
+		pointers = new Pointer[0];
 
-		for( TouchListener l : listeners )
+		for( final TouchListener l : listeners )
 		{
 			l.reset();
 		}

@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl;
 
 import java.util.ArrayList;
@@ -54,10 +53,6 @@ public class Game implements Renderer
 	 */
 	public static GLVersion glVersion;
 
-	/**
-	 * Roots of the tree that will be configured with
-	 * {@link #launchConfiguration()}
-	 */
 	private static Object[] confRoots = null;
 
 	private static ArrayList<SurfaceListener> surfaceListeners =
@@ -68,7 +63,7 @@ public class Game implements Renderer
 	/**
 	 * @param sl
 	 */
-	public static void addSurfaceLIstener( SurfaceListener sl )
+	public static void addSurfaceLIstener( final SurfaceListener sl )
 	{
 		surfaceListeners.add( sl );
 	}
@@ -76,24 +71,26 @@ public class Game implements Renderer
 	/**
 	 * @param sl
 	 */
-	public static void removeSurfaceListener( SurfaceListener sl )
+	public static void removeSurfaceListener( final SurfaceListener sl )
 	{
 		surfaceListeners.remove( sl );
 	}
 
 	/**
-	 * Convenience to set {@link #confRoots}
+	 * Set the roots of the tree that will be configured with
+	 * {@link #launchConfiguration()}
 	 * 
 	 * @param roots
+	 * @see #launchConfiguration()
 	 */
-	public static void setConfigurationRoots( Object... roots )
+	public static void setConfigurationRoots( final Object... roots )
 	{
 		confRoots = roots;
 	}
 
 	/**
-	 * Launches a configuration activity for the objects in
-	 * {@link #confRoots}
+	 * Launches a configuration activity for the objects previously passed to
+	 * {@link #setConfigurationRoots(Object...)}
 	 * 
 	 * @see #setConfigurationRoots(Object...)
 	 */
@@ -115,14 +112,14 @@ public class Game implements Renderer
 	 * 
 	 * @param name
 	 */
-	public void loadConfiguration( String name )
+	public void loadConfiguration( final String name )
 	{
 		Persist.load( ga, name, confRoots );
 	}
 
 	/**
-	 * Call this when we may have lost track of touchscreen activity
-	 * e.g.: when we were in another activity, etc
+	 * Call this when we may have lost track of touchscreen activity e.g.: when
+	 * we were in another activity, etc
 	 */
 	public void resetTouches()
 	{
@@ -142,10 +139,10 @@ public class Game implements Renderer
 	private final GameActivity ga;
 
 	/**
-	 * The desired logic advance, in seconds, or -1 to disable fixed
-	 * interval advances. Be careful when setting a fixed logic advance
-	 * - things will not go well if executing the logic code takes
-	 * longer than the logic advance value.
+	 * The desired logic advance, in seconds, or -1 to disable fixed interval
+	 * advances. Be careful when setting a fixed logic advance - things will not
+	 * go well if executing the logic code takes longer than the logic advance
+	 * value.
 	 */
 	@Variable( "Logic advance" )
 	@Summary( "Fixed logic tick delta in seconds, or <0 for variable advance" )
@@ -170,12 +167,13 @@ public class Game implements Renderer
 	 * @param ga
 	 *           used solely to quit when we run out of phases
 	 * @param requiredVersion
-	 *           The {@link GLVersion} that will be required in the
-	 *           game, or <code>null</code> not to bother checking
+	 *           The {@link GLVersion} that will be required in the game, or
+	 *           <code>null</code> not to bother checking
 	 * @param phase
 	 *           The initial phase
 	 */
-	public Game( GameActivity ga, GLVersion requiredVersion, Phase phase )
+	public Game( final GameActivity ga, final GLVersion requiredVersion,
+			final Phase phase )
 	{
 		this.ga = ga;
 		this.requiredVersion = requiredVersion;
@@ -183,21 +181,23 @@ public class Game implements Renderer
 	}
 
 	@Override
-	public void onSurfaceCreated( GL10 gl, EGLConfig config )
+	public void onSurfaceCreated( final GL10 gl, final EGLConfig config )
 	{
 		Log.i( RUGL_TAG, "Surface created at " + new Date() );
 
-		String glVersionString = GLES10.glGetString( GLES10.GL_VERSION );
-		String extensionsString = GLES10.glGetString( GLES10.GL_EXTENSIONS );
+		final String glVersionString = GLES10.glGetString( GLES10.GL_VERSION );
+		final String extensionsString = GLES10.glGetString( GLES10.GL_EXTENSIONS );
 
-		StringBuilder buff = new StringBuilder();
-		buff.append( "\tVendor = " ).append( GLES10.glGetString( GLES10.GL_VENDOR ) );
-		buff.append( "\n\tRenderer = " ).append( GLES10.glGetString( GLES10.GL_RENDERER ) );
+		final StringBuilder buff = new StringBuilder();
+		buff.append( "\tVendor = " ).append(
+				GLES10.glGetString( GLES10.GL_VENDOR ) );
+		buff.append( "\n\tRenderer = " ).append(
+				GLES10.glGetString( GLES10.GL_RENDERER ) );
 		buff.append( "\n\tVersion = " ).append( glVersionString );
 		buff.append( "\n\tExtensions" );
 		if( extensionsString != null )
 		{
-			for( String ex : extensionsString.split( " " ) )
+			for( final String ex : extensionsString.split( " " ) )
 			{
 				buff.append( "\n\t\t" + ex );
 			}
@@ -215,7 +215,8 @@ public class Game implements Renderer
 
 		Log.i( RUGL_TAG, "Detected " + glVersion );
 
-		if( requiredVersion != null && requiredVersion.ordinal() > glVersion.ordinal() )
+		if( requiredVersion != null
+				&& requiredVersion.ordinal() > glVersion.ordinal() )
 		{
 			// requirements fail!
 			ga.showToast( "Required OpenGLES version " + requiredVersion
@@ -238,11 +239,12 @@ public class Game implements Renderer
 	}
 
 	/**
-	 * Default implementation is to set up a 1:1 orthographic
-	 * projection. Touches are scaled onto a 800x480 virtual resolution
+	 * Default implementation is to set up a 1:1 orthographic projection. Touches
+	 * are scaled onto a 800x480 virtual resolution
 	 */
 	@Override
-	public void onSurfaceChanged( GL10 gl, int width, int height )
+	public void onSurfaceChanged( final GL10 gl, final int width,
+			final int height )
 	{
 		Game.screenWidth = width;
 		Game.screenHeight = height;
@@ -262,7 +264,7 @@ public class Game implements Renderer
 	}
 
 	@Override
-	public void onDrawFrame( GL10 gl )
+	public void onDrawFrame( final GL10 gl )
 	{
 		if( currentPhase == null )
 		{ // time to quit
@@ -298,8 +300,8 @@ public class Game implements Renderer
 
 		timer.tick( "logic" );
 
-		long now = System.currentTimeMillis();
-		long dur = now - lastLogic;
+		final long now = System.currentTimeMillis();
+		final long dur = now - lastLogic;
 
 		if( logicAdvance > 0 )
 		{
@@ -359,7 +361,7 @@ public class Game implements Renderer
 		 * @param width
 		 * @param height
 		 */
-		public void onSurfaceChanged( int width, int height )
+		public void onSurfaceChanged( final int width, final int height )
 		{
 		}
 	}

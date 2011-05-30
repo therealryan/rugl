@@ -1,28 +1,24 @@
 /*
- * Copyright (c) 2007, Ryan McNally All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. Neither the name of the <ORGANIZATION> nor
- * the names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.
+ * Copyright (c) 2007, Ryan McNally All rights reserved. Redistribution and use
+ * in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution. Neither
+ * the name of the <ORGANIZATION> nor the names of its contributors may be used
+ * to endorse or promote products derived from this software without specific
+ * prior written permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS
+ * AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING,
+ * BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+ * A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package com.ryanm.droid.rugl.util;
@@ -30,9 +26,8 @@ package com.ryanm.droid.rugl.util;
 import java.util.List;
 
 /**
- * Tries to pack rectangles as tightly as possible. An implementation
- * of the algorithm described at
- * http://www.blackpawn.com/texts/lightmaps/default.html
+ * Tries to pack rectangles as tightly as possible. An implementation of the
+ * algorithm described at http://www.blackpawn.com/texts/lightmaps/default.html
  * 
  * @author ryanm
  * @param <P>
@@ -60,7 +55,7 @@ public class RectanglePacker<P>
 		 * Indicates that the rectangle fitted with room to spare
 		 */
 		FIT
-	};
+	}
 
 	private Node root;
 
@@ -79,20 +74,20 @@ public class RectanglePacker<P>
 	 * @param border
 	 *           The border to preserve between packed items
 	 */
-	public RectanglePacker( int width, int height, int border )
+	public RectanglePacker( final int width, final int height, final int border )
 	{
 		root = new Node( new Rectangle( 0, 0, width, height ) );
 		this.border = border;
 	}
 
 	/**
-	 * Builds a list of all {@link Rectangle}s in the tree, for
-	 * debugging purposes
+	 * Builds a list of all {@link Rectangle}s in the tree, for debugging
+	 * purposes
 	 * 
 	 * @param rectangles
 	 *           The list to add the tree's {@link Rectangle}s to
 	 */
-	public void inspectRectangles( List<Rectangle> rectangles )
+	public void inspectRectangles( final List<Rectangle> rectangles )
 	{
 		root.getRectangles( rectangles );
 	}
@@ -102,10 +97,10 @@ public class RectanglePacker<P>
 	 * 
 	 * @param item
 	 *           The item to search for
-	 * @return The {@link Rectangle} where that item resides, or null
-	 *         if not found
+	 * @return The {@link Rectangle} where that item resides, or null if not
+	 *         found
 	 */
-	public Rectangle findRectangle( P item )
+	public Rectangle findRectangle( final P item )
 	{
 		return root.findRectange( item );
 	}
@@ -129,15 +124,15 @@ public class RectanglePacker<P>
 	 *           The item to pack
 	 * @return The packed location, or null if it will not fit.
 	 */
-	public Rectangle insert( int width, int height, P o )
+	public Rectangle insert( final int width, final int height, final P o )
 	{
-		Node n = root.insert( width + 2 * border, height + 2 * border, o );
+		final Node n = root.insert( width + 2 * border, height + 2 * border, o );
 
 		if( n != null )
 		{
-			Rectangle r =
-					new Rectangle( n.rect.x + border, n.rect.y + border, n.rect.width - 2 * border,
-							n.rect.height - 2 * border );
+			final Rectangle r =
+					new Rectangle( n.rect.x + border, n.rect.y + border,
+							n.rect.width - 2 * border, n.rect.height - 2 * border );
 			return r;
 		}
 		else
@@ -147,15 +142,15 @@ public class RectanglePacker<P>
 	}
 
 	/**
-	 * Removes an item from the tree, consolidating the space if
-	 * possible. The space can easily become fragmented, so don't rely
-	 * on this to work as cleverly as you would like.
+	 * Removes an item from the tree, consolidating the space if possible. The
+	 * space can easily become fragmented, so don't rely on this to work as
+	 * cleverly as you would like.
 	 * 
 	 * @param o
 	 *           the item to remove
 	 * @return <code>true</code> if the item was found, false otherwise
 	 */
-	public boolean remove( P o )
+	public boolean remove( final P o )
 	{
 		return root.remove( o );
 	}
@@ -182,7 +177,7 @@ public class RectanglePacker<P>
 
 	private class Node
 	{
-		private Rectangle rect;
+		private final Rectangle rect;
 
 		private P occupier = null;
 
@@ -190,12 +185,12 @@ public class RectanglePacker<P>
 
 		private Node right = null;
 
-		private Node( Rectangle r )
+		private Node( final Rectangle r )
 		{
 			this.rect = r;
 		}
 
-		private Rectangle findRectange( P item )
+		private Rectangle findRectange( final P item )
 		{
 			if( isLeaf() )
 			{
@@ -210,7 +205,7 @@ public class RectanglePacker<P>
 			}
 			else
 			{
-				Rectangle l = left.findRectange( item );
+				final Rectangle l = left.findRectange( item );
 
 				if( l != null )
 				{
@@ -223,7 +218,7 @@ public class RectanglePacker<P>
 			}
 		}
 
-		private Node insert( int width, int height, P o )
+		private Node insert( final int width, final int height, final P o )
 		{
 			if( !isLeaf() )
 			{
@@ -243,7 +238,7 @@ public class RectanglePacker<P>
 					return null;
 				}
 
-				Fit fit = fits( width, height );
+				final Fit fit = fits( width, height );
 
 				switch( fit )
 				{
@@ -267,11 +262,10 @@ public class RectanglePacker<P>
 		}
 
 		/**
-		 * Determines if this node contains an item, even many levels
-		 * below
+		 * Determines if this node contains an item, even many levels below
 		 * 
-		 * @return <code>true</code> if this node or any of it's
-		 *         descendants holds an item
+		 * @return <code>true</code> if this node or any of it's descendants holds
+		 *         an item
 		 */
 		private boolean isOccupied()
 		{
@@ -283,10 +277,10 @@ public class RectanglePacker<P>
 		 * 
 		 * @param o
 		 *           the item to remove
-		 * @return <code>true</code> if the item was found,
-		 *         <code>false</code> otherwise
+		 * @return <code>true</code> if the item was found, <code>false</code>
+		 *         otherwise
 		 */
-		private boolean remove( P o )
+		private boolean remove( final P o )
 		{
 			if( isLeaf() )
 			{
@@ -319,10 +313,10 @@ public class RectanglePacker<P>
 			}
 		}
 
-		private void split( int width, int height )
+		private void split( final int width, final int height )
 		{
-			int dw = rect.width - width;
-			int dh = rect.height - height;
+			final int dw = rect.width - width;
+			final int dh = rect.height - height;
 
 			assert dw >= 0;
 			assert dh >= 0;
@@ -332,20 +326,24 @@ public class RectanglePacker<P>
 			{
 				l = new Rectangle( rect.x, rect.y, width, rect.height );
 
-				r = new Rectangle( l.x + width, rect.y, rect.width - width, rect.height );
+				r =
+						new Rectangle( l.x + width, rect.y, rect.width - width,
+								rect.height );
 			}
 			else
 			{
 				l = new Rectangle( rect.x, rect.y, rect.width, height );
 
-				r = new Rectangle( rect.x, l.y + height, rect.width, rect.height - height );
+				r =
+						new Rectangle( rect.x, l.y + height, rect.width, rect.height
+								- height );
 			}
 
 			left = new Node( l );
 			right = new Node( r );
 		}
 
-		private Fit fits( int width, int height )
+		private Fit fits( final int width, final int height )
 		{
 			if( width <= rect.width && height <= rect.height )
 			{
@@ -362,7 +360,7 @@ public class RectanglePacker<P>
 			return Fit.FAIL;
 		}
 
-		private void getRectangles( List<Rectangle> rectangles )
+		private void getRectangles( final List<Rectangle> rectangles )
 		{
 			rectangles.add( rect );
 
@@ -402,7 +400,8 @@ public class RectanglePacker<P>
 		 */
 		public final int height;
 
-		private Rectangle( int x, int y, int width, int height )
+		private Rectangle( final int x, final int y, final int width,
+				final int height )
 		{
 			this.x = x;
 			this.y = y;
@@ -410,7 +409,7 @@ public class RectanglePacker<P>
 			this.height = height;
 		}
 
-		private Rectangle( Rectangle r )
+		private Rectangle( final Rectangle r )
 		{
 			this.x = r.x;
 			this.y = r.y;

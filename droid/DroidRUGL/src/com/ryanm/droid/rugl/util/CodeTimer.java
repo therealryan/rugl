@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.util;
 
 import java.text.DecimalFormat;
@@ -41,7 +40,7 @@ public class CodeTimer
 		recalibrate( 10000 );
 	}
 
-	private StringBuilder buff = new StringBuilder();
+	private final StringBuilder buff = new StringBuilder();
 
 	/**
 	 * The name of this {@link CodeTimer}, to identify the output
@@ -51,22 +50,22 @@ public class CodeTimer
 	/**
 	 * Names of intervals
 	 */
-	private String[] intervalNames = new String[ 5 ];
+	private String[] intervalNames = new String[5];
 
 	/**
 	 * Sum of interval durations
 	 */
-	private long[] intervalDurationSums = new long[ intervalNames.length ];
+	private long[] intervalDurationSums = new long[intervalNames.length];
 
 	/**
 	 * Minimum interval durations
 	 */
-	private long[] minIntervalDurations = new long[ intervalNames.length ];
+	private long[] minIntervalDurations = new long[intervalNames.length];
 
 	/**
 	 * Maximum interval durations
 	 */
-	private long[] maxIntervalDurations = new long[ intervalNames.length ];
+	private long[] maxIntervalDurations = new long[intervalNames.length];
 
 	/**
 	 * The index of the current interval
@@ -118,8 +117,8 @@ public class CodeTimer
 	public int logFrequencySeconds = 5;
 
 	/**
-	 * The level of information printed for the total time spent in a
-	 * profiling period
+	 * The level of information printed for the total time spent in a profiling
+	 * period
 	 */
 	@Variable( "Period" )
 	@Category( "Output" )
@@ -134,14 +133,14 @@ public class CodeTimer
 
 	/**
 	 * @param name
-	 *           A name for this {@link CodeTimer}, so as to identify
-	 *           the output
+	 *           A name for this {@link CodeTimer}, so as to identify the output
 	 * @param period
 	 *           output for profiling period duration. May not be null
 	 * @param interval
 	 *           output for interval durations, May not be null
 	 */
-	public CodeTimer( String name, Output period, Output interval )
+	public CodeTimer( final String name, final Output period,
+			final Output interval )
 	{
 		this.name = name;
 		this.period = period;
@@ -152,18 +151,18 @@ public class CodeTimer
 	}
 
 	/**
-	 * Call to start a profiling period, or to start an interval in an
-	 * open period
+	 * Call to start a profiling period, or to start an interval in an open
+	 * period
 	 * 
 	 * @param name
-	 *           A helpful name for this interval. Makes it easy to
-	 *           find what bit of code you're measuring
+	 *           A helpful name for this interval. Makes it easy to find what bit
+	 *           of code you're measuring
 	 */
-	public void tick( String name )
+	public void tick( final String name )
 	{
 		if( enabled )
 		{
-			long clickTime = System.nanoTime();
+			final long clickTime = System.nanoTime();
 
 			if( !periodStarted )
 			{
@@ -174,7 +173,7 @@ public class CodeTimer
 			}
 			else
 			{
-				long duration = clickTime - lastClickTime;
+				final long duration = clickTime - lastClickTime;
 				intervalDurationSums[ intervalIndex ] += duration;
 				if( duration < minIntervalDurations[ intervalIndex ] )
 				{
@@ -216,16 +215,15 @@ public class CodeTimer
 	 * Call to end a profiling period
 	 * 
 	 * @param print
-	 *           <code>true</code> to print results, <code>false</code>
-	 *           not to
+	 *           <code>true</code> to print results, <code>false</code> not to
 	 */
-	public void lastTick( boolean print )
+	public void lastTick( final boolean print )
 	{
 		if( enabled )
 		{
-			long clickTime = System.nanoTime();
+			final long clickTime = System.nanoTime();
 
-			long intervalDuration = clickTime - lastClickTime;
+			final long intervalDuration = clickTime - lastClickTime;
 			intervalDurationSums[ intervalIndex ] += intervalDuration;
 			if( intervalDuration < minIntervalDurations[ intervalIndex ] )
 			{
@@ -238,7 +236,7 @@ public class CodeTimer
 
 			intervalIndex = 0;
 
-			long periodDuration = clickTime - periodStartTime;
+			final long periodDuration = clickTime - periodStartTime;
 			periodDurationSum += periodDuration;
 			if( periodDuration < minPeriodDuration )
 			{
@@ -256,24 +254,30 @@ public class CodeTimer
 			if( print )
 			{
 				buff.append( name ).append( " period \tmin=" )
-						.append( period.format( minPeriodDuration, 1 ) ).append( "\tmean=" )
+						.append( period.format( minPeriodDuration, 1 ) )
+						.append( "\tmean=" )
 						.append( period.format( periodDurationSum, periodCount ) )
-						.append( "\tmax=" ).append( period.format( maxPerdiodDuration, 1 ) );
+						.append( "\tmax=" )
+						.append( period.format( maxPerdiodDuration, 1 ) );
 				Log.i( LOGTAG, buff.toString() );
 				buff.delete( 0, buff.length() );
 
-				long perDur = periodDurationSum / periodCount;
+				final long perDur = periodDurationSum / periodCount;
 
-				for( int i = 0; i < intervalNames.length && intervalNames[ i ] != null; i++ )
+				for( int i = 0; i < intervalNames.length
+						&& intervalNames[ i ] != null; i++ )
 				{
-					float intDur = intervalDurationSums[ i ] / periodCount;
-					float p = intDur / perDur;
-					buff.append( "\t" ).append( intervalNames[ i ] )
-							.append( "\t" + percent.format( p ) ).append( "\t" )
+					final float intDur = intervalDurationSums[ i ] / periodCount;
+					final float p = intDur / perDur;
+					buff.append( "\t" )
+							.append( intervalNames[ i ] )
+							.append( "\t" + percent.format( p ) )
+							.append( "\t" )
 							.append( interval.format( minIntervalDurations[ i ], 1 ) )
 							.append( "\t" )
-							.append( interval.format( intervalDurationSums[ i ], periodCount ) )
-							.append( "\t" )
+							.append(
+									interval.format( intervalDurationSums[ i ],
+											periodCount ) ).append( "\t" )
 							.append( interval.format( maxIntervalDurations[ i ], 1 ) );
 					Log.i( LOGTAG, buff.toString() );
 					buff.delete( 0, buff.length() );
@@ -302,10 +306,10 @@ public class CodeTimer
 	 * @param numTests
 	 *           10000 might be about right
 	 */
-	public static void recalibrate( int numTests )
+	public static void recalibrate( final int numTests )
 	{
-		boolean print = false;
-		CodeTimer codeTimer = new CodeTimer( "calibrate", null, null );
+		final boolean print = false;
+		final CodeTimer codeTimer = new CodeTimer( "calibrate", null, null );
 		// warm the JIT
 		for( int i = 0; i < 1024; i++ )
 		{
@@ -315,25 +319,26 @@ public class CodeTimer
 
 		// find how out long it takes to call click(), so that time can
 		// be accounted for
-		ArrayList<Long> selfTimeObservations = new ArrayList<Long>( numTests );
+		final ArrayList<Long> selfTimeObservations =
+				new ArrayList<Long>( numTests );
 		for( int i = 0; i < numTests; i++ )
 		{
-			long nanoSelfTime = -( System.nanoTime() - System.nanoTime() );
+			final long nanoSelfTime = -( System.nanoTime() - System.nanoTime() );
 
 			codeTimer.tick( "foo" );
 
-			long t0 = System.nanoTime();
+			final long t0 = System.nanoTime();
 			codeTimer.tick( "bar" );
-			long t1 = System.nanoTime();
+			final long t1 = System.nanoTime();
 
 			codeTimer.tick( "baz" );
 			codeTimer.lastTick( false );
 
-			long currentSelfTime = t1 - t0 - nanoSelfTime;
+			final long currentSelfTime = t1 - t0 - nanoSelfTime;
 			if( print )
 			{
-				Log.i( LOGTAG, "calibrating : currentSelfTime == " + currentSelfTime
-						+ ", nanoSelfTime == " + nanoSelfTime );
+				Log.i( LOGTAG, "calibrating : currentSelfTime == "
+						+ currentSelfTime + ", nanoSelfTime == " + nanoSelfTime );
 			}
 			selfTimeObservations.add( new Long( currentSelfTime ) );
 		}
@@ -359,8 +364,9 @@ public class CodeTimer
 		}
 		if( print )
 		{
-			Log.i( LOGTAG, "calibrating : Slimmed list: selfTimeObservations.size() == "
-					+ selfTimeObservations.size() );
+			Log.i( LOGTAG,
+					"calibrating : Slimmed list: selfTimeObservations.size() == "
+							+ selfTimeObservations.size() );
 			for( int i = 0; i < selfTimeObservations.size(); i++ )
 			{
 				Log.i( LOGTAG, "calibrating : selfTimeObservations.get(i) == "
@@ -390,24 +396,23 @@ public class CodeTimer
 		/**
 		 * Second-level granularity
 		 */
-		Seconds
-		{
+		Seconds {
 			@Override
-			public String format( long totalNanos, long count )
+			public String format( final long totalNanos, final long count )
 			{
-				double avTotalSeconds = ( double ) totalNanos / ( count * NANOS_IN_A_SECOND );
+				final double avTotalSeconds =
+						( double ) totalNanos / ( count * NANOS_IN_A_SECOND );
 				return fourDP.format( avTotalSeconds ) + "s";
 			}
 		},
 		/**
 		 * Millisecond-level granularity
 		 */
-		Millis
-		{
+		Millis {
 			@Override
-			public String format( long totalNanos, long count )
+			public String format( final long totalNanos, final long count )
 			{
-				double avTotalMillis =
+				final double avTotalMillis =
 						( double ) totalNanos / ( count * NANOS_IN_A_MILLISECOND );
 				return fourDP.format( avTotalMillis ) + "ms";
 			}
@@ -415,12 +420,11 @@ public class CodeTimer
 		/**
 		 * Nanosecond-level granularity
 		 */
-		Nanos
-		{
+		Nanos {
 			@Override
-			public String format( long totalNanos, long count )
+			public String format( final long totalNanos, final long count )
 			{
-				double avTotalNanos = ( double ) totalNanos / count;
+				final double avTotalNanos = ( double ) totalNanos / count;
 				return fourDP.format( avTotalNanos ) + "ns";
 			}
 		};
@@ -433,5 +437,5 @@ public class CodeTimer
 		 * @return A string describing the average time
 		 */
 		public abstract String format( long totalNanos, long count );
-	};
+	}
 }

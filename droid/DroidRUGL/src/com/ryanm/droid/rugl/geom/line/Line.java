@@ -1,4 +1,3 @@
-
 package com.ryanm.droid.rugl.geom.line;
 
 import java.util.LinkedList;
@@ -10,18 +9,16 @@ import com.ryanm.droid.rugl.util.geom.LineUtils;
 import com.ryanm.droid.rugl.util.geom.Vector2f;
 import com.ryanm.droid.rugl.util.geom.VectorUtils;
 
-
 /**
- * Renders a sequence of line segments into a line or line loop.
- * Doesn't behave very well when the angle between adjacent segments
- * gets small, so watch it. On the other hand, there's no overdraw, so
- * go nuts with the transparency.
+ * Renders a sequence of line segments into a line or line loop. Doesn't behave
+ * very well when the angle between adjacent segments gets small, so watch it.
+ * On the other hand, there's no overdraw, so go nuts with the transparency.
  * 
  * @author ryanm
  */
 public class Line
 {
-	private LinkedList<Vector2f> points = new LinkedList<Vector2f>();
+	private final LinkedList<Vector2f> points = new LinkedList<Vector2f>();
 
 	/**
 	 * The width of the renderer line
@@ -43,12 +40,12 @@ public class Line
 	private Vector2f lastButOneAdded = null;
 
 	/**
-	 * Adds a point to the line sequence. Sequential coincident points
-	 * will be ignored.
+	 * Adds a point to the line sequence. Sequential coincident points will be
+	 * ignored.
 	 * 
 	 * @param p
 	 */
-	public void addPoint( Vector2f p )
+	public void addPoint( final Vector2f p )
 	{
 		if( lastAdded == null || lastAdded.x != p.x || lastAdded.y != p.y )
 		{
@@ -62,7 +59,8 @@ public class Line
 			{
 				assert points.size() >= 2 : points.size();
 
-				int ccw = LineUtils.relativeCCW( lastButOneAdded, lastAdded, p );
+				final int ccw =
+						LineUtils.relativeCCW( lastButOneAdded, lastAdded, p );
 
 				if( ccw == 0 )
 				{
@@ -108,14 +106,14 @@ public class Line
 	 *           The z coordinate of the line
 	 * @return The shape that represents the line
 	 */
-	public Shape buildLine( float z )
+	public Shape buildLine( final float z )
 	{
 		Shape s = null;
 
 		if( points.size() >= 2 )
 		{
-			List<Vector2f> v = new LinkedList<Vector2f>();
-			List<Short> i = new LinkedList<Short>();
+			final List<Vector2f> v = new LinkedList<Vector2f>();
+			final List<Short> i = new LinkedList<Short>();
 
 			Vector2f last = null;
 			Vector2f current = points.removeFirst();
@@ -176,7 +174,9 @@ public class Line
 
 			assert points.isEmpty();
 
-			s = new Shape( ShapeUtil.extractVerts( v, z ), ShapeUtil.extractIndices( i ) );
+			s =
+					new Shape( ShapeUtil.extractVerts( v, z ),
+							ShapeUtil.extractIndices( i ) );
 		}
 
 		clear();
@@ -189,10 +189,9 @@ public class Line
 	 * 
 	 * @param z
 	 *           The z-coordinate of the loop
-	 * @return The loop shape, or null if there were less than three
-	 *         points
+	 * @return The loop shape, or null if there were less than three points
 	 */
-	public Shape buildLoop( float z )
+	public Shape buildLoop( final float z )
 	{
 		Shape s = null;
 
@@ -206,9 +205,9 @@ public class Line
 			// check if penultimate-last-first is colinear, and remove
 			// last if needed
 			{
-				Vector2f first = points.getFirst();
-				Vector2f last = points.removeLast();
-				Vector2f penultimate = points.getLast();
+				final Vector2f first = points.getFirst();
+				final Vector2f last = points.removeLast();
+				final Vector2f penultimate = points.getLast();
 
 				if( LineUtils.relativeCCW( penultimate, last, first ) != 0 )
 				{
@@ -221,11 +220,11 @@ public class Line
 				return buildLine( z );
 			}
 
-			List<Vector2f> v = new LinkedList<Vector2f>();
-			List<Short> i = new LinkedList<Short>();
+			final List<Vector2f> v = new LinkedList<Vector2f>();
+			final List<Short> i = new LinkedList<Short>();
 
-			Vector2f first = points.removeFirst();
-			Vector2f second = points.removeFirst();
+			final Vector2f first = points.removeFirst();
+			final Vector2f second = points.removeFirst();
 
 			points.add( first );
 			points.add( second );
@@ -298,7 +297,9 @@ public class Line
 			assert lastLeft != -1;
 			addQuad( i, lastLeft, lastRight, firstLeft, firstRight );
 
-			s = new Shape( ShapeUtil.extractVerts( v, z ), ShapeUtil.extractIndices( i ) );
+			s =
+					new Shape( ShapeUtil.extractVerts( v, z ),
+							ShapeUtil.extractIndices( i ) );
 		}
 
 		clear();
@@ -306,44 +307,18 @@ public class Line
 		return s;
 	}
 
-	private void addQuad( List<Short> indices, short lastLeft, short lastRight, short nextLeft,
-			short nextRight )
-	{
-		assert lastLeft != lastRight;
-		assert lastLeft != nextLeft;
-		assert lastLeft != nextRight;
-
-		assert lastRight != nextLeft;
-		assert lastRight != nextRight;
-
-		assert nextLeft != nextRight;
-
-		Short pl = new Short( lastLeft );
-		Short pr = new Short( lastRight );
-		Short nl = new Short( nextLeft );
-		Short nr = new Short( nextRight );
-
-		indices.add( pl );
-		indices.add( nl );
-		indices.add( pr );
-
-		indices.add( nl );
-		indices.add( nr );
-		indices.add( pr );
-	}
-
 	/**
-	 * Computes the starting vertices, the left vertex is computed
-	 * first
+	 * Computes the starting vertices, the left vertex is computed first
 	 * 
 	 * @param first
 	 * @param second
 	 * @param verts
 	 * @param indices
 	 */
-	private void start( Vector2f first, Vector2f second, List<Vector2f> verts, List<Short> indices )
+	private void start( final Vector2f first, final Vector2f second,
+			final List<Vector2f> verts, final List<Short> indices )
 	{
-		Vector2f dir = Vector2f.sub( second, first, null );
+		final Vector2f dir = Vector2f.sub( second, first, null );
 		dir.normalise();
 		dir.scale( width / 2.0f );
 
@@ -364,17 +339,18 @@ public class Line
 	}
 
 	/**
-	 * Computes the ending vertices, the left vertex is computed first.
-	 * Also does line capping
+	 * Computes the ending vertices, the left vertex is computed first. Also does
+	 * line capping
 	 * 
 	 * @param penultimate
 	 * @param last
 	 * @param verts
 	 * @param indices
 	 */
-	private void end( Vector2f penultimate, Vector2f last, List<Vector2f> verts, List<Short> indices )
+	private void end( final Vector2f penultimate, final Vector2f last,
+			final List<Vector2f> verts, final List<Short> indices )
 	{
-		Vector2f dir = Vector2f.sub( penultimate, last, null );
+		final Vector2f dir = Vector2f.sub( penultimate, last, null );
 		if( dir.x == 0 && dir.y == 0 )
 		{
 			dir.set( 1, 0 );
@@ -401,11 +377,11 @@ public class Line
 	}
 
 	/**
-	 * Computes the three vertices that make up a corner. If this
-	 * corner is a left-hander, the vertices will be added in the order
-	 * right-corner-right. If a right-hander, vertices will be in
-	 * left-corner-left order. No vertices will be added if the three
-	 * points are colinear. Also adds line join decorations
+	 * Computes the three vertices that make up a corner. If this corner is a
+	 * left-hander, the vertices will be added in the order right-corner-right.
+	 * If a right-hander, vertices will be in left-corner-left order. No vertices
+	 * will be added if the three points are colinear. Also adds line join
+	 * decorations
 	 * 
 	 * @param previous
 	 *           The previous point
@@ -415,24 +391,25 @@ public class Line
 	 *           The next point
 	 * @param verts
 	 *           The list to add to
-	 * @return 1 if this was a left-hand corner, -1 if a right-hander,
-	 *         0 if it wasn't really a corner at all
+	 * @return 1 if this was a left-hand corner, -1 if a right-hander, 0 if it
+	 *         wasn't really a corner at all
 	 */
-	private int corner( Vector2f previous, Vector2f current, Vector2f next, List<Vector2f> verts,
-			List<Short> indices )
+	private int corner( final Vector2f previous, final Vector2f current,
+			final Vector2f next, final List<Vector2f> verts,
+			final List<Short> indices )
 	{
-		int ccw = LineUtils.relativeCCW( previous, current, next );
+		final int ccw = LineUtils.relativeCCW( previous, current, next );
 
 		if( ccw != 0 )
 		{
-			Vector2f pn = Vector2f.sub( current, previous, null );
+			final Vector2f pn = Vector2f.sub( current, previous, null );
 			pn.normalise();
 			pn.scale( width / 2.0f );
 			float x = pn.x;
 			pn.x = -pn.y;
 			pn.y = x;
 
-			Vector2f nn = Vector2f.sub( next, current, null );
+			final Vector2f nn = Vector2f.sub( next, current, null );
 			nn.normalise();
 			nn.scale( width / 2.0f );
 			x = nn.x;
@@ -443,16 +420,17 @@ public class Line
 			nn.scale( ccw );
 
 			// left
-			Vector2f pp1 = Vector2f.sub( previous, pn, null );
-			Vector2f pp2 = Vector2f.sub( current, pn, null );
-			Vector2f np1 = Vector2f.sub( current, nn, null );
-			Vector2f np2 = Vector2f.sub( next, nn, null );
+			final Vector2f pp1 = Vector2f.sub( previous, pn, null );
+			final Vector2f pp2 = Vector2f.sub( current, pn, null );
+			final Vector2f np1 = Vector2f.sub( current, nn, null );
+			final Vector2f np2 = Vector2f.sub( next, nn, null );
 
-			Vector2f corner = LineUtils.lineIntersection( pp1, pp2, np1, np2, null );
+			final Vector2f corner =
+					LineUtils.lineIntersection( pp1, pp2, np1, np2, null );
 			pn.scale( 2 );
 			nn.scale( 2 );
-			Vector2f pleft = Vector2f.add( corner, pn, null );
-			Vector2f nleft = Vector2f.add( corner, nn, null );
+			final Vector2f pleft = Vector2f.add( corner, pn, null );
+			final Vector2f nleft = Vector2f.add( corner, nn, null );
 
 			verts.add( pleft );
 			verts.add( corner );
@@ -478,16 +456,18 @@ public class Line
 	 *           The z-coordinate of the segment
 	 * @return A {@link Shape} representing the segment
 	 */
-	public Shape buildSegmentShape( Vector2f start, Vector2f end, float z )
+	public Shape buildSegmentShape( final Vector2f start, final Vector2f end,
+			final float z )
 	{
-		List<Vector2f> v = new LinkedList<Vector2f>();
-		List<Short> i = new LinkedList<Short>();
+		final List<Vector2f> v = new LinkedList<Vector2f>();
+		final List<Short> i = new LinkedList<Short>();
 
 		start( start, end, v, i );
 
-		short lastLeft = 0, lastRight = 1, nextLeft, nextRight;
+		final short lastLeft = 0, lastRight = 1;
+		short nextLeft, nextRight;
 
-		int lastIndex = v.size() - 1;
+		final int lastIndex = v.size() - 1;
 		end( start, end, v, i );
 
 		nextLeft = ( short ) ( lastIndex + 1 );
@@ -495,6 +475,50 @@ public class Line
 
 		addQuad( i, lastLeft, lastRight, nextLeft, nextRight );
 
-		return new Shape( ShapeUtil.extractVerts( v, z ), ShapeUtil.extractIndices( i ) );
+		return new Shape( ShapeUtil.extractVerts( v, z ),
+				ShapeUtil.extractIndices( i ) );
+	}
+
+	static void addQuad( final List<Short> indices, final short lastLeft,
+			final short lastRight, final short nextLeft, final short nextRight )
+	{
+		assert lastLeft != lastRight;
+		assert lastLeft != nextLeft;
+		assert lastLeft != nextRight;
+
+		assert lastRight != nextLeft;
+		assert lastRight != nextRight;
+
+		assert nextLeft != nextRight;
+
+		final Short pl = new Short( lastLeft );
+		final Short pr = new Short( lastRight );
+		final Short nl = new Short( nextLeft );
+		final Short nr = new Short( nextRight );
+
+		indices.add( pl );
+		indices.add( nl );
+		indices.add( pr );
+
+		indices.add( nl );
+		indices.add( nr );
+		indices.add( pr );
+	}
+
+	static void addTriangle( final Short i1, final Short i2, final Short i3,
+			final int ccw, final List<Short> indices )
+	{
+		if( ccw == 1 )
+		{
+			indices.add( i1 );
+			indices.add( i2 );
+			indices.add( i3 );
+		}
+		else
+		{
+			indices.add( i1 );
+			indices.add( i3 );
+			indices.add( i2 );
+		}
 	}
 }
