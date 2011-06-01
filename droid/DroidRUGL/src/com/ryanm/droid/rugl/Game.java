@@ -240,7 +240,7 @@ public class Game implements Renderer
 
 	/**
 	 * Default implementation is to set up a 1:1 orthographic projection. Touches
-	 * are scaled onto a 800x480 virtual resolution
+	 * are scaled are similarly scaled 1:1
 	 */
 	@Override
 	public void onSurfaceChanged( final GL10 gl, final int width,
@@ -260,7 +260,8 @@ public class Game implements Renderer
 			surfaceListeners.get( i ).onSurfaceChanged( width, height );
 		}
 
-		Touch.setScreenSize( 800, 480, Game.screenWidth, Game.screenHeight );
+		Touch.setScreenSize( Game.screenWidth, Game.screenHeight,
+				Game.screenWidth, Game.screenHeight );
 	}
 
 	@Override
