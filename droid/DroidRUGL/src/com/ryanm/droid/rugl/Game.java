@@ -49,6 +49,16 @@ public class Game implements Renderer
 	public static int screenHeight;
 
 	/**
+	 * Desired width of screen for rendering and input purposes
+	 */
+	public static float gameWidth = 800;
+
+	/**
+	 * Desired height of screen for rendering and input purposes
+	 */
+	public static float gameHeight = 480;
+
+	/**
 	 * OpenGLES version
 	 */
 	public static GLVersion glVersion;
@@ -249,7 +259,8 @@ public class Game implements Renderer
 		Game.screenWidth = width;
 		Game.screenHeight = height;
 
-		GLUtil.scaledOrtho( width, height, width, height, -1, 1 );
+		GLUtil.scaledOrtho( gameWidth, gameHeight, screenWidth, screenHeight, -1,
+				1 );
 
 		Log.i( RUGL_TAG, "Surface changed " + width + " x " + height );
 
@@ -260,8 +271,8 @@ public class Game implements Renderer
 			surfaceListeners.get( i ).onSurfaceChanged( width, height );
 		}
 
-		Touch.setScreenSize( Game.screenWidth, Game.screenHeight,
-				Game.screenWidth, Game.screenHeight );
+		Touch.setScreenSize( gameWidth, Game.gameHeight, Game.screenWidth,
+				Game.screenHeight );
 	}
 
 	@Override

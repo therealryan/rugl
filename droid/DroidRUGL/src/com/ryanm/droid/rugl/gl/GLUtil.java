@@ -1,28 +1,24 @@
 /*
- * Copyright (c) 2002 Shaven Puppy Ltd All rights reserved.
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions
- * are met: Redistributions of source code must retain the above
- * copyright notice, this list of conditions and the following
- * disclaimer. Redistributions in binary form must reproduce the above
- * copyright notice, this list of conditions and the following
- * disclaimer in the documentation and/or other materials provided
- * with the distribution. Neither the name of 'Shaven Puppy' nor the
- * names of its contributors may be used to endorse or promote
- * products derived from this software without specific prior written
- * permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
- * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
- * INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
- * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS
- * BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY,
- * OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
- * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
- * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY
- * OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
- * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
- * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
- * DAMAGE.
+ * Copyright (c) 2002 Shaven Puppy Ltd All rights reserved. Redistribution and
+ * use in source and binary forms, with or without modification, are permitted
+ * provided that the following conditions are met: Redistributions of source
+ * code must retain the above copyright notice, this list of conditions and the
+ * following disclaimer. Redistributions in binary form must reproduce the above
+ * copyright notice, this list of conditions and the following disclaimer in the
+ * documentation and/or other materials provided with the distribution. Neither
+ * the name of 'Shaven Puppy' nor the names of its contributors may be used to
+ * endorse or promote products derived from this software without specific prior
+ * written permission. THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND
+ * CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
+ * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A
+ * PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS;
+ * OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
+ * WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+ * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 package com.ryanm.droid.rugl.gl;
@@ -48,22 +44,21 @@ public class GLUtil
 	private static ByteBuffer scratch = BufferUtils.createByteBuffer( 4 * 16 );
 
 	/**
-	 * A rendering state containing typical, but not default, state:
-	 * blending, depth test, alpha test etc
+	 * A rendering state containing typical, but not default, state: blending,
+	 * depth test, alpha test etc
 	 */
-	public static final State typicalState =
-			new State()
-					.with(
-							new Blend( SourceFactor.SRC_ALPHA,
-									DestinationFactor.ONE_MINUS_SRC_ALPHA ) )
-					.with( new DepthTest( ComparisonFunction.LEQUAL ) )
-					.with( new AlphaTest( ComparisonFunction.GREATER, 0 ) );
+	public static final State typicalState = new State()
+			.with(
+					new Blend( SourceFactor.SRC_ALPHA,
+							DestinationFactor.ONE_MINUS_SRC_ALPHA ) )
+			.with( new DepthTest( ComparisonFunction.LEQUAL ) )
+			.with( new AlphaTest( ComparisonFunction.GREATER, 0 ) );
 
 	/**
 	 * @param size
 	 * @return An {@link IntBuffer} handy for temporary use
 	 */
-	public static IntBuffer intScratch( int size )
+	public static IntBuffer intScratch( final int size )
 	{
 		scratch.clear();
 		scratch.limit( 4 * size );
@@ -71,14 +66,13 @@ public class GLUtil
 	}
 
 	/**
-	 * Returns the nearest power of 2, which is either n if n is
-	 * already a power of 2, or the next higher number than n which is
-	 * a power of 2.
+	 * Returns the nearest power of 2, which is either n if n is already a power
+	 * of 2, or the next higher number than n which is a power of 2.
 	 * 
 	 * @param n
 	 * @return The smallest power of two that is larger than n
 	 */
-	public static int nextPowerOf2( int n )
+	public static int nextPowerOf2( final int n )
 	{
 		int x = 1;
 
@@ -102,8 +96,9 @@ public class GLUtil
 	 * @param far
 	 *           distance to far clip plane
 	 */
-	public static void scaledOrtho( int desiredWidth, int desiredHeight, int screenWidth,
-			int screenHeight, float near, float far )
+	public static void scaledOrtho( final float desiredWidth,
+			final float desiredHeight, final int screenWidth,
+			final int screenHeight, final float near, final float far )
 	{
 		GLES10.glMatrixMode( GLES10.GL_PROJECTION );
 		GLES10.glLoadIdentity();
@@ -116,14 +111,14 @@ public class GLUtil
 	}
 
 	/**
-	 * Throws {@link GLException} if {@link GLES10#glGetError()}
-	 * returns anything other than {@link GLES10#GL_NO_ERROR}
+	 * Throws {@link GLException} if {@link GLES10#glGetError()} returns anything
+	 * other than {@link GLES10#GL_NO_ERROR}
 	 * 
 	 * @throws GLException
 	 */
 	public static void checkGLError() throws GLException
 	{
-		int err = GLES10.glGetError();
+		final int err = GLES10.glGetError();
 		if( err != GLES10.GL_NO_ERROR )
 		{
 			throw new GLException( err );
