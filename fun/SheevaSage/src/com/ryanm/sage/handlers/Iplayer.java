@@ -161,7 +161,7 @@ public class Iplayer extends Handler
 
 						try
 						{
-							UshareRefresh.refresh();
+							TwonkyRefresh.refresh();
 						}
 						catch( IOException e )
 						{

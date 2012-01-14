@@ -1,4 +1,3 @@
-
 package com.ryanm.sage;
 
 import java.io.FileInputStream;
@@ -24,9 +23,9 @@ import com.ryanm.sage.handlers.Quoter;
 import com.ryanm.sage.handlers.Restarter;
 import com.ryanm.sage.handlers.Teller;
 import com.ryanm.sage.handlers.TorrentStarter;
+import com.ryanm.sage.handlers.TwonkyRefresh;
 import com.ryanm.sage.handlers.URLGrabber;
 import com.ryanm.sage.handlers.Unrar;
-import com.ryanm.sage.handlers.UshareRefresh;
 import com.ryanm.sage.handlers.WhereAmI;
 
 /**
@@ -39,15 +38,15 @@ public class SheevaSage
 	/**
 	 * @param args
 	 */
-	public static void main( String[] args )
+	public static void main( final String[] args )
 	{
 		try
 		{
-			Properties p = new Properties( System.getProperties() );
+			final Properties p = new Properties( System.getProperties() );
 			p.load( new FileInputStream( args[ 0 ] ) );
 			System.setProperties( p );
 
-			SheevaSage gj = new SheevaSage();
+			final SheevaSage sage = new SheevaSage();
 
 			boolean connected = false;
 
@@ -55,10 +54,10 @@ public class SheevaSage
 			{
 				try
 				{
-					gj.connect();
+					sage.connect();
 					connected = true;
 				}
-				catch( XMPPException e )
+				catch( final XMPPException e )
 				{
 					System.out.println( "Connection failed! " + e.getMessage() );
 					System.out.println( "I'll try again in 10 seconds" );
@@ -67,7 +66,7 @@ public class SheevaSage
 					{
 						Thread.sleep( 10000 );
 					}
-					catch( InterruptedException e1 )
+					catch( final InterruptedException e1 )
 					{
 						e1.printStackTrace();
 					}
@@ -75,9 +74,9 @@ public class SheevaSage
 			}
 			while( !connected );
 
-			gj.go();
+			sage.go();
 		}
-		catch( IOException e )
+		catch( final IOException e )
 		{
 			e.printStackTrace();
 		}
@@ -87,28 +86,29 @@ public class SheevaSage
 
 	private final String password;
 
-	private final XMPPConnection connection = new XMPPConnection( new ConnectionConfiguration(
-			"talk.google.com", 5222, "googlemail.com" ) );
+	private final XMPPConnection connection =
+			new XMPPConnection( new ConnectionConfiguration( "talk.google.com",
+					5222, "googlemail.com" ) );
 
 	private PacketCollector collector;
 
 	/**
-	 * Written your own handler? Construct one and put it in this
-	 * array. When a message is received, each handler is tried in turn
-	 * with {@link Handler#handle(Message, XMPPConnection)} until a
-	 * handler returns <code>true</code> from that call. Note that
-	 * {@link Quoter} always returns <code>true</code>, so put your
-	 * handler into the array before that one
+	 * Written your own handler? Construct one and put it in this array. When a
+	 * message is received, each handler is tried in turn with
+	 * {@link Handler#handle(Message, XMPPConnection)} until a handler returns
+	 * <code>true</code> from that call. Note that {@link Quoter} always returns
+	 * <code>true</code>, so put your handler into the array before that one
 	 */
-	private final Handler[] handlers = new Handler[] { new URLGrabber(), new TorrentStarter(),
-			new WhereAmI(), new Teller(), new Unrar(), new UshareRefresh(), new Iplayer(),
-			new Restarter(), new Quoter() };
+	private final Handler[] handlers = new Handler[] { new URLGrabber(),
+			new TorrentStarter(), new WhereAmI(), new Teller(), new Unrar(),
+			new TwonkyRefresh(), new Iplayer(), new Restarter(), new Quoter() };
 
-	private PacketFilter filter = new PacketFilter() {
+	private final PacketFilter filter = new PacketFilter(){
 		@Override
-		public boolean accept( Packet packet )
+		public boolean accept( final Packet packet )
 		{
-			if( packet instanceof Message && ( ( Message ) packet ).getType() == Type.chat )
+			if( packet instanceof Message
+					&& ( ( Message ) packet ).getType() == Type.chat )
 			{
 				return true;
 			}
@@ -117,15 +117,15 @@ public class SheevaSage
 		}
 	};
 
-	private RosterListener rl = new RosterListener() {
+	private final RosterListener rl = new RosterListener(){
 		@Override
-		public void presenceChanged( Presence presence )
+		public void presenceChanged( final Presence presence )
 		{
-			String from = StringUtils.parseBareAddress( presence.getFrom() );
+			final String from = StringUtils.parseBareAddress( presence.getFrom() );
 
 			if( presence.isAvailable() )
 			{
-				for( Handler h : handlers )
+				for( final Handler h : handlers )
 				{
 					h.online( from, connection );
 				}
@@ -133,17 +133,17 @@ public class SheevaSage
 		}
 
 		@Override
-		public void entriesUpdated( Collection<String> addresses )
+		public void entriesUpdated( final Collection<String> addresses )
 		{
 		}
 
 		@Override
-		public void entriesDeleted( Collection<String> addresses )
+		public void entriesDeleted( final Collection<String> addresses )
 		{
 		}
 
 		@Override
-		public void entriesAdded( Collection<String> addresses )
+		public void entriesAdded( final Collection<String> addresses )
 		{
 		}
 	};
@@ -159,12 +159,12 @@ public class SheevaSage
 		password = System.getProperty( "sheevasage.googlePass" );
 		assert password != null : "sheevasage.googlePass property not set";
 
-		Runtime.getRuntime().addShutdownHook( new Thread() {
+		Runtime.getRuntime().addShutdownHook( new Thread(){
 			@Override
 			public void run()
 			{
 				disconnect();
-			};
+			}
 		} );
 
 		System.out.println( "SheevaSage active handlers:" );
@@ -185,7 +185,7 @@ public class SheevaSage
 
 		connection.login( id, password );
 
-		Presence p = new Presence( Presence.Type.available );
+		final Presence p = new Presence( Presence.Type.available );
 		p.setStatus( "A stalwart of the grabbing industry since " + new Date() );
 		connection.sendPacket( p );
 
@@ -199,15 +199,15 @@ public class SheevaSage
 	 */
 	public void go()
 	{
-		boolean shouldstop = false;
+		final boolean shouldstop = false;
 
 		while( !shouldstop )
 		{
-			Packet packet = collector.nextResult();
+			final Packet packet = collector.nextResult();
 
 			if( packet instanceof Message )
 			{
-				Message m = ( Message ) packet;
+				final Message m = ( Message ) packet;
 
 				if( m.getBody() != null )
 				{
@@ -217,7 +217,7 @@ public class SheevaSage
 					{
 						for( int i = 0; i < handlers.length; i++ )
 						{
-							String status = handlers[ i ].status();
+							final String status = handlers[ i ].status();
 							if( status != null )
 							{
 								reply( m, status, connection );
@@ -240,7 +240,7 @@ public class SheevaSage
 			}
 		}
 
-		disconnect();
+		// disconnect();
 	}
 
 	/**
@@ -260,9 +260,10 @@ public class SheevaSage
 	 * @param reply
 	 * @param connection
 	 */
-	public static void reply( Message in, String reply, XMPPConnection connection )
+	public static void reply( final Message in, final String reply,
+			final XMPPConnection connection )
 	{
-		Message m = new Message( in.getFrom(), Type.chat );
+		final Message m = new Message( in.getFrom(), Type.chat );
 		m.setBody( reply );
 		connection.sendPacket( m );
 	}

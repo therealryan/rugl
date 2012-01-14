@@ -1,4 +1,3 @@
-
 package com.ryanm.sage;
 
 import java.io.BufferedReader;
@@ -7,8 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * {@link SheevaSage} relies on other programs to do the hard stuff,
- * this class provides convenient ways to call external programs
+ * {@link SheevaSage} relies on other programs to do the hard stuff, this class
+ * provides convenient ways to call external programs
  * 
  * @author ryanm
  */
@@ -18,27 +17,25 @@ public class ProcessUtil
 	 * Executes the command
 	 * 
 	 * @param block
-	 *           <code>true</code> to make the method call block untill
-	 *           the process completes, <code>false</code> to return
-	 *           immediately
+	 *           <code>true</code> to make the method call block until the
+	 *           process completes, <code>false</code> to return immediately
 	 * @param listener
-	 *           Will be supplied with whatever is produced on the
-	 *           process's out and err streams. Supply
-	 *           <code>null</code> to simply dump to sysout
+	 *           Will be supplied with whatever is produced on the process's out
+	 *           and err streams. Supply <code>null</code> to simply dump to
+	 *           sysout
 	 * @param directory
 	 *           The working directory for the command
 	 * @param command
-	 *           The command array. Every element of the command should
-	 *           be in its own string, e.g.: to execute
-	 *           "rm -r foo.txt", pass the strings "rm", "-r" and
-	 *           "foo.txt"
+	 *           The command array. Every element of the command should be in its
+	 *           own string, e.g.: to execute "rm -r foo.txt", pass the strings
+	 *           "rm", "-r" and "foo.txt"
 	 * @throws IOException
 	 *            if something is wrong with the command
 	 */
-	public static void execute( boolean block, Listener listener, File directory, String... command )
-			throws IOException
+	public static void execute( final boolean block, final Listener listener,
+			final File directory, final String... command ) throws IOException
 	{
-		ProcessBuilder pb = new ProcessBuilder( command );
+		final ProcessBuilder pb = new ProcessBuilder( command );
 		pb.directory( directory );
 		pb.redirectErrorStream( true );
 		final Process p = pb.start();
@@ -46,28 +43,31 @@ public class ProcessUtil
 
 		final Listener l = listener != null ? listener : dumper;
 
-		Thread outHandler = new Thread( "Output handler for " + command[ 0 ] ) {
-			@Override
-			public void run()
-			{
-				BufferedReader br = new BufferedReader( new InputStreamReader( p.getInputStream() ) );
-				try
-				{
-					String line = null;
-					do
+		final Thread outHandler =
+				new Thread( "Output handler for " + command[ 0 ] ){
+					@Override
+					public void run()
 					{
+						final BufferedReader br =
+								new BufferedReader( new InputStreamReader(
+										p.getInputStream() ) );
+						try
+						{
+							String line = null;
+							do
+							{
 
-						line = br.readLine();
-						l.line( line );
+								line = br.readLine();
+								l.line( line );
+							}
+							while( line != null );
+						}
+						catch( final IOException e )
+						{
+							e.printStackTrace();
+						}
 					}
-					while( line != null );
-				}
-				catch( IOException e )
-				{
-					e.printStackTrace();
-				}
-			}
-		};
+				};
 
 		outHandler.start();
 
@@ -80,7 +80,7 @@ public class ProcessUtil
 					p.waitFor();
 					done = true;
 				}
-				catch( InterruptedException e )
+				catch( final InterruptedException e )
 				{
 					e.printStackTrace();
 				}
@@ -90,7 +90,7 @@ public class ProcessUtil
 			{
 				outHandler.join();
 			}
-			catch( InterruptedException e )
+			catch( final InterruptedException e )
 			{
 				e.printStackTrace();
 			}
@@ -108,15 +108,14 @@ public class ProcessUtil
 		 * A line has been output
 		 * 
 		 * @param line
-		 *           the output line, or null when the process has
-		 *           finished
+		 *           the output line, or null when the process has finished
 		 */
 		public void line( String line );
 	}
 
-	private static Listener dumper = new Listener() {
+	private static Listener dumper = new Listener(){
 		@Override
-		public void line( String line )
+		public void line( final String line )
 		{
 			System.out.println( line );
 		}

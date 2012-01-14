@@ -91,7 +91,7 @@ public class Unrar extends Handler
 								{
 									ProcessUtil.execute( true, l, dir, "unrar", "e", rars[ 0 ].getName() );
 
-									UshareRefresh.refresh();
+									TwonkyRefresh.refresh();
 								}
 								catch( IOException e )
 								{

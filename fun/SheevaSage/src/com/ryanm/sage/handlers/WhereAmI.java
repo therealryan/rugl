@@ -1,4 +1,3 @@
-
 package com.ryanm.sage.handlers;
 
 import java.io.BufferedReader;
@@ -28,13 +27,13 @@ import com.ryanm.sage.SheevaSage;
 public class WhereAmI extends Handler
 {
 	@Override
-	public boolean handle( Message m, XMPPConnection connection )
+	public boolean handle( final Message m, final XMPPConnection connection )
 	{
 		if( m.getBody().toLowerCase().equals( "where" ) )
 		{
-			LinkedList<InetAddress> addrList = getNetworkAddresses();
+			final LinkedList<InetAddress> addrList = getNetworkAddresses();
 
-			StringBuilder buff = new StringBuilder( "Locally, I'm at " );
+			final StringBuilder buff = new StringBuilder( "Locally, I'm at " );
 
 			String addr = "";
 
@@ -46,7 +45,7 @@ public class WhereAmI extends Handler
 
 			SheevaSage.reply( m, buff.toString(), connection );
 
-			String wa = getWorldAddress();
+			final String wa = getWorldAddress();
 
 			if( wa != null )
 			{
@@ -59,19 +58,21 @@ public class WhereAmI extends Handler
 		return false;
 	}
 
-	private String getWorldAddress()
+	private static String getWorldAddress()
 	{
 		try
 		{
-			URLConnection uc = new URL( "http://www.whatismyip.org/" ).openConnection();
-			BufferedReader br = new BufferedReader( new InputStreamReader( uc.getInputStream() ) );
+			final URLConnection uc =
+					new URL( "http://www.whatismyip.org/" ).openConnection();
+			final BufferedReader br =
+					new BufferedReader( new InputStreamReader( uc.getInputStream() ) );
 			return br.readLine();
 		}
-		catch( MalformedURLException e )
+		catch( final MalformedURLException e )
 		{
 			e.printStackTrace();
 		}
-		catch( IOException e )
+		catch( final IOException e )
 		{
 			e.printStackTrace();
 		}
@@ -79,25 +80,26 @@ public class WhereAmI extends Handler
 		return null;
 	}
 
-	private LinkedList<InetAddress> getNetworkAddresses()
+	private static LinkedList<InetAddress> getNetworkAddresses()
 	{
-		LinkedList<InetAddress> addrList = new LinkedList<InetAddress>();
+		final LinkedList<InetAddress> addrList = new LinkedList<InetAddress>();
 
 		try
 		{
-			Enumeration<NetworkInterface> nis = NetworkInterface.getNetworkInterfaces();
+			final Enumeration<NetworkInterface> nis =
+					NetworkInterface.getNetworkInterfaces();
 
 			while( nis.hasMoreElements() )
 			{
-				NetworkInterface ni = nis.nextElement();
+				final NetworkInterface ni = nis.nextElement();
 
 				if( !ni.isLoopback() )
 				{
-					Enumeration<InetAddress> addresses = ni.getInetAddresses();
+					final Enumeration<InetAddress> addresses = ni.getInetAddresses();
 
 					while( addresses.hasMoreElements() )
 					{
-						InetAddress addr = addresses.nextElement();
+						final InetAddress addr = addresses.nextElement();
 						if( !addr.isLoopbackAddress() && addr instanceof Inet4Address )
 						{
 							addrList.add( addr );
@@ -106,7 +108,7 @@ public class WhereAmI extends Handler
 				}
 			}
 		}
-		catch( SocketException e )
+		catch( final SocketException e )
 		{
 			e.printStackTrace();
 		}
