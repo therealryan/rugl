@@ -13,7 +13,7 @@
 	<resources> 
 		<j2se version="1.4+"/> 
 		<jar href="jars/Line.jar"/>
-		<extension name="lwjgl" href="http://lwjgl.org/jnlp/extension.php" />
+		<extension name="lwjgl" href="http://lwjgl.org/webstart/2.6/extension.jnlp" />
 	</resources>
 	<application-desc main-class="com.ryanm.glscratch.LineTest">
 	</application-desc>
