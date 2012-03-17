@@ -1,3 +1,6 @@
+NB: I've migrated this project accross to http://code.google.com/p/sheevasage/
+All future development will be happening there
+
 Build requirements:
 
 	JDK 1.6
